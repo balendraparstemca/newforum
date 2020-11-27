@@ -6,7 +6,7 @@ import { FiMap } from 'react-icons/fi';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { connect } from "react-redux";
 import { fetchAmenties, fetchCategory } from '../../services/action/common';
-import { CreateListing, getListDetail, UpdateListing } from '../../services/action/list';
+import { getListDetail, UpdateListing } from '../../services/action/list';
 class GeneralInfo extends Component {
     constructor(props) {
         super(props)
@@ -78,6 +78,7 @@ class GeneralInfo extends Component {
                 address: this.props.listdetail && this.props.listdetail.address,
                 place: this.props.listdetail && this.props.listdetail.city,
                 listid: this.props.listdetail && this.props.listdetail.listing_id,
+                catid: {label: this.props.listdetail && this.props.listdetail.categoryname, value : this.props.listdetail && this.props.listdetail.categoryid},
                 keywords: this.props.listdetail && this.props.listdetail.keywords,
                 zipcode: this.props.listdetail && this.props.listdetail.zipcode,
                 country: this.props.listdetail && this.props.listdetail.country,
@@ -164,6 +165,7 @@ class GeneralInfo extends Component {
             description: this.state.description,
             keywords: this.state.keywords,
             categoryid: this.state.catid.value,
+            categoryname:this.state.catid.label,
             address: this.state.address,
             country: this.state.country,
             state: this.state.region,

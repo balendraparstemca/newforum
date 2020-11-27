@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 
 class WidgetPopularPost extends Component {
     state = {
-        title: 'Popular Posts',
+        title: 'Similar Posts',
         items: [
             {
                 img: require('../../../assets/images/img34.jpg'),

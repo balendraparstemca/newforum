@@ -38,69 +38,84 @@ import BlogDetail from "./pages/blogs/BlogDetail";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Error from "./pages/Error";
-import { ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FilesUploadComponent from './components/imageupload';
 import EditListing from './pages/dashboard/EditListing';
+import categoryListinggrid from './pages/listings/categoryListinggrid';
+import userdashboard from './pages/blogs/userdashboard';
+import newpost from './pages/blogs/newpost';
+import newcommunity from './pages/blogs/newcommunity';
+import communitydashboard from './pages/blogs/communitydashboard';
+import editPost from './pages/blogs/editPost';
+import ListHeader from './components/common/listHeader';
+import CategoryListHeader from './components/common/categoryListheader';
 
 
 
 function App() {
   return (
     <>
-    <Route>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/index2" component={Home2} />
-        <Route path="/index3" component={Home3} />
-        <Route path="/index4" component={Home4} />
-        <Route path="/index5" component={Home5} />
-        <Route path="/all-categories" component={AllCategories} />
-        <Route path="/all-locations" component={AllLocations} />
-        <Route path="/top-place" component={TopPlaces} />
-        <Route path="/listing-grid" component={ListingGrid} />
-        <Route path="/listing-list" component={ListingList} />
-        <Route path="/list-map-view" component={ListMapView} />
-        <Route path="/list-map-view2" component={ListMapView2} />
-        <Route path="/list-left-sidebar" component={ListLeftSidebar} />
-        <Route path="/list-right-sidebar" component={ListRightSidebar} />
-        <Route path="/listing-details/:listurl" exact component={ListingDetails} />
-        <Route path="/listing-details/:listurl/edit" exact  component={EditListing} />
-        <Route path="/add-listing" component={AddListing} />
-        <Route path="/user-profile" component={UserProfile} />
-        <Route path="/top-author" component={TopAuthors} />
-        <Route path="/dashboard" component={EditListing} />
-        <Route path="/booking" component={Booking} />
-        <Route path="/booking-confirmation" component={BookingConfirmation} />
-        <Route path="/invoice" component={Invoice} />
-        <Route path="/pricing" component={PricingPlan} />
-        <Route path="/about" component={About} />
-        <Route path="/faq" component={Faq} />
-        <Route path="/contact" component={Contact} />
-        <Route path="/recover" component={RecoverPassword} />
-        <Route path="/blog-full-width" component={BlogFullWidth} />
-        <Route path="/blog-grid" component={BlogGrid} />
-        <Route path="/blog-left-sidebar" component={BlogLeftSidebar} />
-        <Route path="/blog-right-sidebar" component={BlogRightSidebar} />
-        <Route path="/blog-single" component={BlogDetail} />
-        <Route path="/login" component={Login} />
-        <Route path="/imageupload" component={FilesUploadComponent} />
-        <Route path="/sign-up" component={SignUp} />
-        <Route component={Error} />
-      </Switch>
-    </Route>
-       <ToastContainer
-       position="bottom-left"
-       autoClose={3000}
-       hideProgressBar={false}
-       newestOnTop={false}
-       closeOnClick
-       rtl={false}
-       pauseOnFocusLoss
-       draggable
-       pauseOnHover
-       />
-       </>
+      <Route>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/index2" component={Home2} />
+          <Route exact  path="/index3" component={Home3} />
+          <Route exact path="/index4" component={Home4} />
+          <Route exact path="/index5" component={Home5} />
+          <Route exact path="/all-categories" component={AllCategories} />
+          <Route exact path="/all-locations" component={AllLocations} />
+          <Route exact path="/top-place" component={TopPlaces} />
+         <Route exact path="/listing-list" exact component={ListHeader} />
+          <Route exact path="/listing-list/:catid" exact component={CategoryListHeader} />
+          <Route exact path="/list-map-view" component={ListMapView} />
+          <Route exact path="/list-map-view2" component={ListMapView2} />
+          <Route exact path="/list-left-sidebar" component={ListLeftSidebar} />
+          <Route exact path="/list-right-sidebar" component={ListRightSidebar} />
+          <Route exact path="/listing-details/:listurl" exact component={ListingDetails} />
+          <Route exact path="/listing-details/:listurl/edit" exact component={EditListing} />
+          <Route exact path="/add-listing" component={AddListing} />
+          <Route exact path="/user-profile/:username" component={UserProfile} />
+          <Route exact path="/top-author" component={TopAuthors} />
+          <Route exact path="/dashboard" component={Dashboard} />
+          <Route exact path="/booking" component={Booking} />
+          <Route exact path="/booking-confirmation" component={BookingConfirmation} />
+          <Route exact path="/invoice" component={Invoice} />
+          <Route exact path="/pricing" component={PricingPlan} />
+          <Route exact path="/about" component={About} />
+          <Route exact path="/faq" component={Faq} />
+          <Route exact path="/contact" component={Contact} />
+          <Route  exact path="/recover" component={RecoverPassword} />
+          <Route path="/forum" exact  component={BlogFullWidth} />
+          <Route path="/forum/home" exact  component={BlogFullWidth} />
+          <Route path="/forum/submit" exact  component={newpost} />
+          <Route path="/forum/submit/:communityname" exact  component={newpost} />
+          <Route path="/forum/newcommunity" exact component={newcommunity} />
+          <Route path="/forum/r/:communityurl" exact component={communitydashboard} />
+          <Route path="/forum/user/:username" exact component={userdashboard} />
+          <Route path="/forum/community" exact component={BlogLeftSidebar} />
+          <Route path="/forum/community/:categoryid" exact component={BlogLeftSidebar} />
+          <Route path="/login" component={Login} />
+          <Route path="/forum/post/:url" exact component={BlogDetail} />
+          <Route path="/forum/post/edit/:url" exact component={editPost} />
+          <Route path="/imageupload" component={FilesUploadComponent} />
+          <Route path="/sign-up" component={SignUp} />
+          <Route path="/error/:what" component={Error} />
+          <Route component={Error} />
+        </Switch>
+      </Route>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </>
   );
 }
 

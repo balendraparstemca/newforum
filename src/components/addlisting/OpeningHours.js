@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Select from "react-select";
 import { addListShedule, getListShedule } from '../../services/action/list';
 import { connect } from "react-redux";
-import WidgetOpenHours from '../sidebars/widgets/WidgetOpenHours';
 const shortby = [
     {
         value: 'closed',

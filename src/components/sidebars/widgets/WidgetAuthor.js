@@ -15,30 +15,10 @@ class WidgetAuthor extends Component {
         number: '+7(111)123456789',
         website: 'www.techydevs.com',
         websiteUrl: 'https://techydevs.com',
-        socials: [
-            {
-                icon: <FaFacebookF />,
-                url: 'https://facebook.com'
-            },
-            {
-                icon: <FaTwitter />,
-                url: 'https://twitter.com'
-            },
-            {
-                icon: <FaInstagram />,
-                url: 'https://instagram.com'
-            },
-            {
-                icon: <FaDribbble />,
-                url: 'https://dribbble.com'
-            },
-            {
-                icon: <FaBehance />,
-                url: 'https://behance.be'
-            }
-        ]
+      
     }
     render() {
+        console.log(this.props.listid)
         return (
             <>
                 <div className="sidebar-widget">
@@ -76,17 +56,43 @@ class WidgetAuthor extends Component {
                     <div className="section-block-2 margin-top-35px margin-bottom-35px"></div>
                     <ul className="social-profile margin-bottom-35px text-center">
 
-                        {this.state.socials.map((item, index) => {
-                            return (
-                                <li key={index}>
-                                    <a href={item.url}>
+                       
+                                <li>
+                                    <a href=''>
                                         <i className="d-inline-block">
-                                            {item.icon}
+                                        <FaFacebookF />
                                         </i>
                                     </a>
                                 </li>
-                            )
-                        })}
+                                <li>
+                                    <a href=''>
+                                        <i className="d-inline-block">
+                                        <FaTwitter />
+                                        </i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href=''>
+                                        <i className="d-inline-block">
+                                        <FaInstagram />
+                                        </i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href=''>
+                                        <i className="d-inline-block">
+                                        <FaDribbble />
+                                        </i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href=''>
+                                        <i className="d-inline-block">
+                                        <FaBehance />
+                                        </i>
+                                    </a>
+                                </li>
+                          
                     </ul>
                     <div className="btn-box text-center">
                         <Button text="view Profile" url="/user-profile" className="d-block">

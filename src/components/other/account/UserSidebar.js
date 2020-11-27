@@ -51,15 +51,10 @@ class UserSidebar extends Component {
                 <div className="section-block-2"></div>
                 <div className="user-contact padding-top-30px">
                     <h3 className="widget-title pb-0 margin-bottom-20px">Contact Details</h3>
-                    <ul className="info-list padding-bottom-30px">
-                        <li><span className="la"><GiPositionMarker /></span> {this.state.address}</li>
-                        <li><span className="la"><FiPhone /></span> {this.state.number}</li>
-                        <li><span className="la"><FaRegEnvelope /></span><a href={'mailto:'+this.state.email}> {this.state.email}</a></li>
-                        <li><span className="la"><IoMdGlobe /></span><a href={this.state.websiteUrl}> {this.state.website}</a></li>
-                    </ul>
+                   
                     <div className="section-block-2"></div>
 
-                    <SocialProfile />
+                  
                 </div>
                 <div className="modal-wrapper">
                     <button type="button" className="theme-btn border-0" data-toggle="modal" data-target=".bs-example-modal-lg">

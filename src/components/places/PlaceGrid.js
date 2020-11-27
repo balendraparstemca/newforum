@@ -121,6 +121,7 @@ class PlaceGrid extends Component {
                 website: 'www.mysitelink.com',
                 date: 'Posted 1 month ago',
                 view: '248',
+                ratingNum: '4.6',
                 ratings: [
                     <IoMdStar />,
                     <IoMdStar />,

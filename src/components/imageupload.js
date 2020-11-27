@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 
 export default class FilesUploadComponent extends Component {

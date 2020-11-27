@@ -52,9 +52,10 @@ export const registerUser = (firstname,lastname,username, email, password) => (d
 export const login = (username, password) => (dispatch) => {
     return AuthService.login(username, password).then(
         (response) => {
+          
             if (response.status === 'SUCCESS') {
 
-                if (response.data.session_token) {
+                if (response) {
                     localStorage.setItem("user", JSON.stringify(response.data));
                 }
 
@@ -107,3 +108,28 @@ export const logout = () => (dispatch) => {
         type: LOGOUT,
     });
 };
+
+
+export const addImageprofile = (formdata,userid) => (dispatch) => {
+
+    return AuthService.addProfileImage(formdata,userid).then(
+        (response) => {
+           toast.success('successfully added image')
+
+            return Promise.resolve();
+        },
+        (error) => {
+
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            toast.error(message)
+      
+            return Promise.reject();
+        }
+    );
+
+}

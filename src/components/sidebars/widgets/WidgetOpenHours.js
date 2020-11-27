@@ -1,43 +1,57 @@
-import React, {Component} from 'react';
-
+import React, { Component } from 'react';
+import { connect } from "react-redux";
 class WidgetOpenHours extends Component {
-    state = {
-        title: 'Opening Hours',
-        stitle: 'now open',
-        items: [
-            {
-                day: 'Monday',
-                time: '9am - 5pm',
-                close: false,
-            },
-            {
-                day: 'Tuesday',
-                time: '9am - 5pm',
-                close: false,
-            },
-            {
-                day: 'Wednesday',
-                time: '9am - 5pm',
-                close: false,
-            },
-            {
-                day: 'Thursday',
-                time: '9am - 5pm',
-                close: false,
-            },
-            {
-                day: 'Friday',
-                time: '9am - 5pm',
-                close: false,
-            },
-            {
-                day: 'Sat-Sun',
-                time: 'Closed',
-                close: true,
-            }
-        ]
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            op: { label: '', value: '' },
+            cl: { label: '', value: '' },
+            dayname: { label: '', value: '' },
+            title: 'Opening Hours',
+            stitle: 'now open',
+            listshedulelist: [],
+            items: [
+                {
+                    day: 'Monday',
+                    time: '9am - 5pm',
+                    close: false,
+                },
+                {
+                    day: 'Tuesday',
+                    time: '9am - 5pm',
+                    close: false,
+                },
+                {
+                    day: 'Wednesday',
+                    time: '9am - 5pm',
+                    close: false,
+                },
+                {
+                    day: 'Thursday',
+                    time: '9am - 5pm',
+                    close: false,
+                },
+                {
+                    day: 'Friday',
+                    time: '9am - 5pm',
+                    close: false,
+                },
+                {
+                    day: 'Sat-Sun',
+                    time: 'Closed',
+                    close: true,
+                }
+            ]
+
+
+        }
     }
+
+
+  
     render() {
+        console.log(this.props.shedulelist);
         return (
             <>
                 <div className="sidebar-widget">
@@ -54,10 +68,10 @@ class WidgetOpenHours extends Component {
                             </span></p>
                         </div>
                         <ul className="list-items padding-top-30px">
-                            {this.state.items.map((item, i) => {
+                            {this.props.shedulelist && this.props.shedulelist.map((item, i) => {
                                 return (
                                     <li key={i} className="d-flex justify-content-between">
-                                        {item.day} <strong className={item.close ? 'color-text' : 'font-weight-medium'}>{item.time}</strong>
+                                        {item.day} <strong className={item.open === 'close' ? 'color-text' : 'font-weight-medium'}>{item.open}-{item.close}</strong>
                                     </li>
                                 )
                             })}
@@ -69,4 +83,16 @@ class WidgetOpenHours extends Component {
     }
 }
 
-export default WidgetOpenHours;
+
+
+function mapStateToProps(state) {
+
+    const { listdetail, shedulelist } = state.list;
+
+    return {
+        listdetail, shedulelist
+
+    };
+
+}
+export default connect(mapStateToProps)(WidgetOpenHours);

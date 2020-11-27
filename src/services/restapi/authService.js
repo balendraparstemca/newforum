@@ -7,7 +7,7 @@ class AuthService {
     return axios
       .post(API_URL + "signin", { email_id, password })
       .then((response) => {
-       return response.data;
+        return response.data;
       });
   }
 
@@ -15,7 +15,7 @@ class AuthService {
     localStorage.removeItem("user");
   }
 
-  register(first_name,last_name,user_name, email_id, password) {
+  register(first_name, last_name, user_name, email_id, password) {
     return axios.post(API_URL + "signup", {
       first_name,
       last_name,
@@ -23,10 +23,17 @@ class AuthService {
       email_id,
       password,
     }).then((response) => {
-   
+
       return response.data;
     });;
   }
+
+
+  addProfileImage(formData, userid) {
+    return axios.post("http://localhost:7999/api/v1/utilities/userprofile_upload/" + userid, formData)
+
+  }
+
 }
 
 export default new AuthService();

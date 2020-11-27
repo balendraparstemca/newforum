@@ -108,6 +108,7 @@ class AddFullDetails extends Component {
 
         const obj = {
             listing_id:this.props.listid && this.props.listid,
+            userid:this.props.userdetails.id,
             owner_name: this.state.ownername,
             email: this.state.email,
             phone: this.state.phone,

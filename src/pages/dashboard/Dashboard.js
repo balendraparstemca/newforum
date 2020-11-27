@@ -1,114 +1,110 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import GeneralHeader from "../../components/common/GeneralHeader";
 import Breadcrumb from "../../components/common/Breadcrumb";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import {Link} from "react-router-dom";
-import { BsListCheck, BsBookmark, BsPencil } from 'react-icons/bs'
-import { FaRegEdit, FaRegTrashAlt, FaGlobeAmericas, FaRegEnvelope } from 'react-icons/fa'
-import { GiPositionMarker } from 'react-icons/gi'
-import { FiPhone, FiEdit } from 'react-icons/fi'
-import { AiOutlineUser, AiOutlinePlusCircle, AiOutlinePoweroff, AiOutlineYoutube, AiOutlineExclamationCircle } from 'react-icons/ai'
+import { Link } from "react-router-dom";
+import { BsListCheck, BsBookmark, BsPencil, } from 'react-icons/bs'
+import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa'
+import { AiOutlineUser, AiOutlinePlusCircle, AiOutlinePoweroff, AiOutlineExclamationCircle } from 'react-icons/ai'
 import Button from "../../components/common/Button";
 import $ from 'jquery'
 import NewsLetter from "../../components/other/cta/NewsLetter";
 import Footer from "../../components/common/footer/Footer";
 import ScrollTopBtn from "../../components/common/ScrollTopBtn";
-
+import { connect } from "react-redux";
+import { addImageprofile } from '../../services/action/auth';
+import { getuserlist, getusersavedlist, userUnsaveList } from '../../services/action/list';
 
 class Dashboard extends Component {
 
+    constructor(props) {
+        super(props)
+        this.uploadSingleFile = this.uploadSingleFile.bind(this)
+        this.upload = this.upload.bind(this)
+        this.state = {
+            file: require('../../assets/images/team2.jpg'),
+            imgCollection: '',
+            breadcrumbimg: require('../../assets/images/bread-bg.jpg'),
+            savedlist: [],
+            userlist: [],
+            userImg: require('../../assets/images/team2.jpg'),
+            userName: 'Mark Williamson',
+            userbio: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium',
+            address: '101 Parkview, New York',
+            phoneNum: '+7(111)123456789',
+            website: 'www.techydevs.com',
+        }
+    }
+
     componentDidMount() {
 
+        this.props.dispatch((getuserlist(this.props.userdetails.id))).then(() => {
+            this.setState({
+                userlist: this.props.alluserlist
+            })
+        })
+        this.props.dispatch((getusersavedlist(this.props.userdetails.id))).then(() => {
+            this.setState({
+                savedlist: this.props.usersavedlist
+            })
+        })
+
         $(document).on('click', '.delete-account-info .delete-account, .card-item .card-content-wrap .delete-btn', function (e) {
-            $('body').addClass('modal-open').css({paddingRight: '17px'});
+            $('body').addClass('modal-open').css({ paddingRight: '17px' });
             $(".account-delete-modal").addClass('show')
             e.preventDefault();
         })
         $(document).on('click', '.account-delete-modal .modal-bg, .account-delete-modal .modal-dialog .btn-box .theme-btn', function (e) {
-            $('body').removeClass('modal-open').css({paddingRight: '0'});
+            $('body').removeClass('modal-open').css({ paddingRight: '0' });
             $(".account-delete-modal").removeClass('show')
             e.preventDefault();
         })
         $(document).on('click', '.user-edit-form .edit-form-btn, .user-edit-form .btn-box .theme-btn', function (e) {
             $(".user-edit-form .dropdown-menu, .user-edit-form .dropdown").toggleClass('show');
-            $(".user-edit-form .dropdown-menu").css({position: 'absolute', transform: 'translate3d(0px, -733px, 0px)', top: '0', left: '0', willChange: 'transform'})
+            $(".user-edit-form .dropdown-menu").css({ position: 'absolute', transform: 'translate3d(0px, -733px, 0px)', top: '0', left: '0', willChange: 'transform' })
             e.preventDefault();
         });
 
     }
 
-    state = {
-        breadcrumbimg: require('../../assets/images/bread-bg.jpg'),
-        cards: [
-            {
-                img: require('../../assets/images/img25.jpg'),
-                title: 'Favorite Place Food Bank',
-                subtitle: 'Bishop Avenue, New York',
-                editTxt: 'Edit',
-                editIcon: <FaRegEdit />,
-                deleteTxt: 'Delete',
-                deleteIcon: <FaRegTrashAlt />,
-                cardLink: '/listing-details'
-            },
-            {
-                img: require('../../assets/images/img26.jpg'),
-                title: 'Beach Blue Boardwalk',
-                subtitle: 'Bishop Avenue, New York',
-                editTxt: 'Edit',
-                editIcon: <FaRegEdit />,
-                deleteTxt: 'Delete',
-                deleteIcon: <FaRegTrashAlt />,
-                cardLink: '/listing-details'
-            },
-            {
-                img: require('../../assets/images/img27.jpg'),
-                title: 'Hotel Govendor',
-                subtitle: 'Bishop Avenue, New York',
-                editTxt: 'Edit',
-                editIcon: <FaRegEdit />,
-                deleteTxt: 'Delete',
-                deleteIcon: <FaRegTrashAlt />,
-                cardLink: '/listing-details'
-            },
-            {
-                img: require('../../assets/images/img28.jpg'),
-                title: 'Favorite Place Food Bank',
-                subtitle: 'Bishop Avenue, New York',
-                editTxt: 'Edit',
-                editIcon: <FaRegEdit />,
-                deleteTxt: 'Delete',
-                deleteIcon: <FaRegTrashAlt />,
-                cardLink: '/listing-details'
-            },
-            {
-                img: require('../../assets/images/img29.jpg'),
-                title: 'Beach Blue Boardwalk',
-                subtitle: 'Bishop Avenue, New York',
-                editTxt: 'Edit',
-                editIcon: <FaRegEdit />,
-                deleteTxt: 'Delete',
-                deleteIcon: <FaRegTrashAlt />,
-                cardLink: '/listing-details'
-            },
-            {
-                img: require('../../assets/images/img30.jpg'),
-                title: 'Hotel Govendor',
-                subtitle: 'Bishop Avenue, New York',
-                editTxt: 'Edit',
-                editIcon: <FaRegEdit />,
-                deleteTxt: 'Delete',
-                deleteIcon: <FaRegTrashAlt />,
-                cardLink: '/listing-details'
-            }
-        ],
-        userImg: require('../../assets/images/team2.jpg'),
-        userName: 'Mark Williamson',
-        userbio: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium',
-        address: '101 Parkview, New York',
-        phoneNum: '+7(111)123456789',
-        website: 'www.techydevs.com',
+    uploadSingleFile(e) {
+        this.setState({
+            imgCollection: e.target.files,
+            file: URL.createObjectURL(e.target.files[0])
+
+        })
     }
+
+    upload(e) {
+        e.preventDefault()
+        var formData = new FormData();
+        for (const key of Object.keys(this.state.imgCollection)) {
+            formData.append('image', this.state.imgCollection[key])
+
+        }
+        this.props.dispatch(addImageprofile(formData, this.props.userdetails.id));
+    }
+
+    Unsave = (listid) => {
+        const obj = {
+            listing_id: listid,
+            saved_by: this.props.userdetails.id
+        }
+        this.props.dispatch(userUnsaveList(obj)).then(() => {
+            this.props.dispatch((getusersavedlist(this.props.userdetails.id))).then(() => {
+                this.setState({
+                    savedlist: this.props.usersavedlist
+                })
+            })
+        })
+
+        console.log(obj);
+
+    }
+
     render() {
+
+
         return (
             <main className="dashboard-page">
                 {/* Header */}
@@ -126,19 +122,21 @@ class Dashboard extends Component {
                                         <TabList className="nav nav-tabs border-0" id="nav-tab">
                                             <Tab>
                                                 <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
-                                                    <span className="la"><BsListCheck /></span> Listings
-                                                </Link>
-                                            </Tab>
-                                            <Tab>
-                                                <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
                                                     <span className="la"><AiOutlineUser /></span> Profile
                                                 </Link>
                                             </Tab>
                                             <Tab>
                                                 <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
-                                                    <span className="la"><BsBookmark /></span> Bookmark
+                                                    <span className="la"><BsListCheck /></span> Listings
                                                 </Link>
                                             </Tab>
+
+                                            <Tab>
+                                                <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
+                                                    <span className="la"><BsBookmark /></span> Bookmark List
+                                                </Link>
+                                            </Tab>
+
                                         </TabList>
                                         <div className="btn-box">
                                             <Link to="/add-listing" className="theme-btn"><span className="la"><AiOutlinePlusCircle /></span> create listing</Link>
@@ -148,49 +146,14 @@ class Dashboard extends Component {
                                 </div>
                                 <div className="col-lg-12">
                                     <div className="tab-content" id="nav-tabContent">
-                                        <TabPanel>
-                                            <div className="row">
 
-                                                {this.state.cards.map((item, i) => {
-                                                    return (
-                                                        <div key={i} className="col-lg-4 column-td-6">
-                                                            <div className="card-item">
-                                                                <Link to={item.cardLink} className="card-image-wrap">
-                                                                    <div className="card-image">
-                                                                        <img src={item.img} className="card__img" alt="Card" />
-                                                                    </div>
-                                                                </Link>
-                                                                <div className="card-content-wrap">
-                                                                    <div className="card-content">
-                                                                        <Link to={item.cardLink}>
-                                                                            <h4 className="card-title mt-0">{item.title}</h4>
-                                                                            <p className="card-sub">{item.subtitle}</p>
-                                                                        </Link>
-                                                                    </div>
-                                                                    <div className="rating-row">
-                                                                        <div className="edit-info-box">
-                                                                            <button type="button" className="theme-btn button-success border-0 mr-1">
-                                                                                <span className="la">{item.editIcon}</span> {item.editTxt}
-                                                                            </button>
-                                                                            <button type="button" className="theme-btn delete-btn border-0" data-toggle="modal" data-target=".product-delete-modal">
-                                                                                <span className="la">{item.deleteIcon}</span> {item.deleteTxt}
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                })}
-
-                                            </div>
-                                        </TabPanel>
                                         <TabPanel>
                                             <div className="row">
                                                 <div className="col-lg-4">
                                                     <div className="user-profile-action">
                                                         <div className="user-pro-img mb-4">
-                                                            <img src={this.state.userImg} alt="user" />
+                                                            <img src={this.state.file} alt='default-list-profile' />
+
                                                             <div className="dropdown">
                                                                 <button
                                                                     className="theme-btn edit-btn dropdown-toggle border-0 after-none"
@@ -200,18 +163,18 @@ class Dashboard extends Component {
                                                                     <i className="la la-photo"></i> Edit
                                                                 </button>
                                                                 <div className="dropdown-menu"
-                                                                     aria-labelledby="editImageMenu">
+                                                                    aria-labelledby="editImageMenu">
                                                                     <div className="upload-btn-box">
                                                                         <form>
-                                                                            <input type="file" name="files[]" id="filer_input" multiple="multiple" />
-                                                                            <button className="theme-btn border-0 w-100 button-success" type="submit" value="submit">
+                                                                            <input type="file" name="files[]" id="filer_input" onChange={this.uploadSingleFile} />
+                                                                            <button className="theme-btn border-0 w-100 button-success" type="button" onClick={this.upload} value="submit">
                                                                                 Save changes
                                                                             </button>
                                                                         </form>
                                                                     </div>
                                                                     <div className="btn-box mt-3">
                                                                         <button className="theme-btn border-0 w-100">Remove
-                                                                            Photo
+                                                                        Photo
                                                                         </button>
                                                                     </div>
                                                                 </div>
@@ -221,89 +184,6 @@ class Dashboard extends Component {
                                                             <h2 className="user__name widget-title pb-2">
                                                                 {this.state.userName}
                                                             </h2>
-                                                            <div className="section-heading">
-                                                                <p className="sec__desc font-size-15 line-height-24">
-                                                                    {this.state.userbio}
-                                                                </p>
-                                                            </div>
-                                                            <ul className="list-items mt-3">
-                                                                <li>
-                                                                    <span className="la d-inline-block"><GiPositionMarker /></span> {this.state.address}
-                                                                </li>
-                                                                <li className="text-lowercase">
-                                                                    <span className="la d-inline-block"><FiPhone /></span> {this.state.phoneNum}
-                                                                </li>
-                                                                <li className="text-lowercase">
-                                                                    <span className="la d-inline-block"><FaGlobeAmericas /></span> {this.state.website}
-                                                                </li>
-                                                            </ul>
-                                                            <div className="user-edit-form mt-4">
-                                                                <div className="dropdown">
-                                                                    <button
-                                                                        className="theme-btn edit-form-btn shadow-none w-100 dropdown-toggle after-none"
-                                                                        type="button" id="editForm"
-                                                                        data-toggle="dropdown" aria-haspopup="true"
-                                                                        aria-expanded="false">
-                                                                        <i className="la"><FiEdit /></i> Edit
-                                                                    </button>
-                                                                    <div className="dropdown-menu" aria-labelledby="editForm">
-                                                                        <div className="contact-form-action">
-                                                                            <div className="input-box">
-                                                                                <label className="label-text">Name</label>
-                                                                                <div className="form-group">
-                                                                                    <span className="la form-icon"><AiOutlineUser /></span>
-                                                                                    <input className="form-control" type="text" name="name" placeholder="Enter your name" />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="input-box">
-                                                                                <label className="label-text">Bio Data</label>
-                                                                                <div className="form-group">
-                                                                                    <span className="la form-icon"><BsPencil /></span>
-                                                                                    <textarea className="message-control form-control" name="message" placeholder="Add a bio"></textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="input-box">
-                                                                                <div className="form-group">
-                                                                                    <span className="la form-icon"><GiPositionMarker /></span>
-                                                                                    <input className="form-control" type="text" name="location" placeholder="Location" />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="input-box">
-                                                                                <div className="form-group">
-                                                                                    <span className="la form-icon"><FiPhone /></span>
-                                                                                    <input className="form-control" type="text" name="number" placeholder="Number" />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="input-box">
-                                                                                <div className="form-group">
-                                                                                    <span className="la form-icon"><FaRegEnvelope /></span>
-                                                                                    <input className="form-control" type="email" name="email" placeholder="Email Address" />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="input-box">
-                                                                                <div className="form-group">
-                                                                                    <span className="la form-icon"><AiOutlineYoutube /></span>
-                                                                                    <input className="form-control" type="text" name="youtube" placeholder="Youtube URL" />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="input-box">
-                                                                                <div className="form-group">
-                                                                                    <span className="la form-icon"><FaGlobeAmericas /></span>
-                                                                                    <input className="form-control" type="text" name="website" placeholder="Website" />
-                                                                                </div>
-                                                                            </div>
-                                                                            <div className="btn-box">
-                                                                                <button type="button" className="theme-btn border-0 button-success mr-1">
-                                                                                    save changes
-                                                                                </button>
-                                                                                <button type="button" className="theme-btn border-0">
-                                                                                    Cancel
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -367,34 +247,75 @@ class Dashboard extends Component {
                                         </TabPanel>
                                         <TabPanel>
                                             <div className="row">
-                                                {this.state.cards.map((item, i) => {
-                                                    return (
-                                                        <div key={i} className="col-lg-4 column-td-6">
-                                                            <div className="card-item">
-                                                                <Link to={item.cardLink} className="card-image-wrap">
-                                                                    <div className="card-image">
-                                                                        <img src={item.img} className="card__img" alt="Card" />
-                                                                    </div>
-                                                                </Link>
-                                                                <div className="card-content-wrap">
-                                                                    <div className="card-content">
-                                                                        <Link to={item.cardLink}>
-                                                                            <h4 className="card-title mt-0">{item.title}</h4>
-                                                                            <p className="card-sub">{item.subtitle}</p>
-                                                                        </Link>
-                                                                    </div>
-                                                                    <div className="rating-row">
-                                                                        <div className="edit-info-box">
-                                                                            <button type="button" className="theme-btn delete-btn border-0" data-toggle="modal" data-target=".product-delete-modal">
-                                                                                <span className="la">{item.deleteIcon}</span> {item.deleteTxt}
+
+                                                {this.state.userlist.length === 0 ? (<div className="card-item center"><h5>there is no list</h5></div>)
+                                                    : this.state.userlist.map((item, i) => {
+                                                        return (
+                                                            <div key={i} className="col-lg-4 column-td-6">
+                                                                <div className="card-item">
+                                                                    <Link to={`/listing-details/${item.canonicalurl}`} className="card-image-wrap">
+                                                                        <div className="card-image">
+                                                                            <img src={`http://localhost:7999/api/v1/utilities/${item.bannerimg}`} className="card__img" alt="Card" />
+                                                                        </div>
+                                                                    </Link>
+                                                                    <div className="card-content-wrap">
+                                                                        <div className="card-content">
+                                                                            <Link to={`/listing-details/${item.canonicalurl}`}>
+                                                                                <h4 className="card-title mt-0">{item.list_title}</h4>
+                                                                                <p className="card-sub">{item.address}</p>
+                                                                            </Link>
+                                                                        </div>
+                                                                        <div className="rating-row">
+                                                                            <div className="edit-info-box">
+                                                                                <button type="button" className="theme-btn button-success border-0 mr-1">
+                                                                                    <Link to={`/listing-details/${item.canonicalurl}/edit`}><span className="la"><FaRegEdit /></span> Edit</Link>
+                                                                                </button>
+                                                                                <button type="button" className="theme-btn delete-btn border-0" data-toggle="modal" data-target=".product-delete-modal">
+                                                                                    <span className="la"><FaRegTrashAlt /></span> Delete
                                                                             </button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    )
-                                                })}
+                                                        )
+                                                    })}
+
+                                            </div>
+                                        </TabPanel>
+                                        <TabPanel>
+                                            <div className="row">
+
+                                                {this.state.savedlist.length === 0 ? (<div className="card-item center"><h5>there is no list</h5></div>)
+                                                    : this.state.savedlist.map((item, i) => {
+                                                        return (
+                                                            <div key={i} className="col-lg-4 column-td-6">
+                                                                <div className="card-item">
+                                                                    <Link to={`/listing-details/${item.canonicalurl}`} className="card-image-wrap">
+                                                                        <div className="card-image">
+                                                                            <img src={`http://localhost:7999/api/v1/utilities/${item.bannerimg}`} className="card__img" alt="Card" />
+                                                                        </div>
+                                                                    </Link>
+                                                                    <div className="card-content-wrap">
+                                                                        <div className="card-content">
+                                                                            <Link to={`/listing-details/${item.canonicalurl}`}>
+                                                                                <h4 className="card-title mt-0">{item.list_title}</h4>
+                                                                                <p className="card-sub">{item.address}</p>
+                                                                            </Link>
+                                                                        </div>
+                                                                        <div className="rating-row">
+                                                                            <div className="edit-info-box">
+
+                                                                                <button type="button" className="theme-btn  border-0" onClick={() => this.Unsave(item.listing_id)}>
+                                                                                    <span className="la"><FaRegTrashAlt /></span> Remove
+                                                                            </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    })}
                                             </div>
                                         </TabPanel>
                                     </div>
@@ -447,4 +368,13 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+
+function mapStateToProps(state) {
+    const { isLoggedIn, userdetails } = state.auth;
+    const { alluserlist, usersavedlist } = state.list;
+    return {
+        isLoggedIn, userdetails, usersavedlist, alluserlist
+
+    };
+}
+export default connect(mapStateToProps)(Dashboard);

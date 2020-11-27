@@ -17,6 +17,22 @@ class CommonService {
             return response.data;
         });
     }
+
+
+    
+
+    getRules(obj) {
+        return axios.get(API_URL + "rule/" + obj).then((response) => {
+            return response.data;
+        });
+    }
+
+    getCommunityFlair(comid) {
+        return axios.get(API_URL + "flair/" + comid).then((response) => {
+            console.log(response)
+            return response.data;
+        });
+    }
 }
 
 export default new CommonService();

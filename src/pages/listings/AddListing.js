@@ -145,6 +145,7 @@ class AddListing extends Component {
             description:this.state.description,
             keywords:this.state.keywords,
             categoryid:this.state.catid.value,
+            categoryname:this.state.catid.label,
             address:this.state.address,
             country:this.state.country,
             state:this.state.region,
@@ -160,16 +161,21 @@ class AddListing extends Component {
             {
                 this.setState({loading:false})
                 this.onReset();
-                this.props.history.push(`/listing-details/hh`);
+                this.props.history.push(`/listing-details/${obj.canonicalurl}/edit`);
 			     window.location.reload();
                 
             }
+            this.setState({loading:false})
+           
+        },()=>{
+            this.setState({loading:false})
+
         })
     
     }
 
     render() {
-        console.log(this.props.isCreated);
+    
         const { country, region, category } = this.state;
         const categories = category && category.length ? category.map(cat => {
             return { value: `${cat.id}`, label: `${cat.name}` };

@@ -5,6 +5,8 @@ const API_URL = "http://localhost:7999/api/v1/list/";
 
 class ListService {
 
+    
+
     createList(obj) {
         return axios.post(API_URL + "create_list", obj).then((response) => {
             console.log(response.data)
@@ -114,6 +116,66 @@ class ListService {
             return response.data;
         });
     }
+
+    reviewlist(obj) {
+        return axios.post(API_URL + "rating_listing", obj).then((response) => {
+            console.log(response.data)
+            return response.data;
+        });
+    }
+
+    getReviewList(obj) {
+        return axios.post(API_URL + "get_listrating", obj).then((response) => {
+            console.log(response.data)
+            return response.data;
+        });
+    }
+
+    saveListing(obj) {
+        return axios.post(API_URL + "save_list", obj).then((response) => {
+            console.log(response.data)
+            return response.data;
+        });
+    }
+
+    reportList(obj) {
+        return axios.post(API_URL + "report_list", obj).then((response) => {
+            return response.data;
+        });
+    }
+
+    getuserList(userid) {
+        return axios.get(API_URL + "getuser_list/" + userid).then((response) => {
+            return response.data;
+        });
+    }
+
+    getusersavedList(userid) {
+        return axios.get(API_URL + "getuser_save_list/" + userid).then((response) => {
+            return response.data;
+        });
+    }
+
+
+    unsaveList(obj) {
+        return axios.post(API_URL + "unsave_list", obj).then((response) => {
+            return response.data;
+        });
+    }
+
+
+    getHomeList() {
+        return axios.get(API_URL + "gethome_list").then((response) => {
+            return response.data;
+        });
+    }
+
+    getCategoryList(catid) {
+        return axios.get(API_URL + "getcategory_list/" + catid).then((response) => {
+            return response.data;
+        });
+    }
+
 
 }
 
