@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { FiSearch } from 'react-icons/fi';
+import { Button } from 'react-bootstrap';
+import { FiRefreshCw, FiSearch } from 'react-icons/fi';
 import Select from 'react-select';
 
 const locations = [
@@ -1051,7 +1052,19 @@ class WidgetSearch extends Component {
                             options={categories}
                         />
                     </div>
+               
                 </div>
+                <div className="row">
+                            <div className="col-lg-12">
+                                <div className="button-shared text-center">
+                                    <Button text="load more" url="#" className="border-0">
+                                        <span className="d-inline-block">
+                                         search
+                                        </span>
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
             </>
         );
     }

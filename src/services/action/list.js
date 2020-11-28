@@ -466,6 +466,31 @@ export const saveList = (obj) => (dispatch) => {
 }
 
 
+export const likeList = (obj) => (dispatch) => {
+
+    return ListService.likeListing(obj).then(
+        (response) => {
+            toast.success(response.message)
+
+            return Promise.resolve();
+        },
+        (error) => {
+
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            toast.error(message)
+
+            return Promise.reject();
+        }
+    );
+
+}
+
+
 export const reportList = (obj) => (dispatch) => {
 
     return ListService.reportList(obj).then(

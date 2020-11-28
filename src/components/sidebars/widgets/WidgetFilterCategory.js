@@ -109,7 +109,7 @@ class WidgetFilterCategory extends Component {
                     <div className="title-shape"></div>
                     <div className="check-box-list show-more-item filter-by-category mt-4 mb-4">
 
-                        {this.state.categories.map(item => {
+                        {this.props.category && this.props.category.map(item => {
                             return (
                                 <div className="custom-checkbox" key={item.id}>
                                     <input type="checkbox" id={'chb'+item.id} />

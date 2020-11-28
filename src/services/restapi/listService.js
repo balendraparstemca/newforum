@@ -138,6 +138,13 @@ class ListService {
         });
     }
 
+    likeListing(obj) {
+        return axios.post(API_URL + "like_list", obj).then((response) => {
+            console.log(response.data)
+            return response.data;
+        });
+    }
+
     reportList(obj) {
         return axios.post(API_URL + "report_list", obj).then((response) => {
             return response.data;

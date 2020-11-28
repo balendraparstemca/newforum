@@ -5,7 +5,7 @@ import UserSidebar from "./UserSidebar";
 import { IoIosCheckmarkCircle, IoIosLink, IoMdStar, IoMdStarHalf } from "react-icons/io";
 import { FiCheck, FiHeart, FiPhone } from "react-icons/fi";
 import { FaRegCalendarCheck } from "react-icons/fa";
-import { AiOutlineEye } from "react-icons/ai";
+import { AiFillQuestionCircle, AiOutlineEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import Button from "../../common/Button";
 import { FiRefreshCw } from 'react-icons/fi'
@@ -126,7 +126,7 @@ class UserProfile extends Component {
                                                         <div className="card-image">
                                                             <img src={item.bannerimg ? `http://localhost:7999/api/v1/utilities/${item.bannerimg}` : item.listimage} className="card__img" alt={item.list_title} />
                                                             <span className='badge'>{this.state.bedge}</span>
-                                                            <span className="badge-toggle" data-toggle="tooltip" data-placement="bottom" title="22 Likes">
+                                                            <span className="badge-toggle" data-toggle="tooltip" data-placement="bottom" title={item.likes}>
                                                                 <FiHeart />
                                                             </span>
                                                         </div>
@@ -142,7 +142,7 @@ class UserProfile extends Component {
                                                             <Link to={`/listing-details/${item.canonicalurl}`}>
 
                                                                 <h4 className="card-title">{item.list_title}
-                                                                    <i><IoIosCheckmarkCircle /></i>
+                                                                   { item.approved===1 ? <i><IoIosCheckmarkCircle /></i>:  <i><AiFillQuestionCircle /><Link to={`/listing-details/${item.canonicalurl}/edit`}>not verified</Link></i>}
                                                                 </h4>
                                                                 <p className="card-sub">
                                                                     {item.address}
@@ -168,7 +168,7 @@ class UserProfile extends Component {
                                                             </div>
                                                             <div className="listing-info">
                                                                 <ul>
-                                                                    <li><span className="info__count"><AiOutlineEye /></span> 22</li>
+                                        <li><span className="info__count"></span> {item.likes}</li>
                                                                     <li>
                                                                         <span className="info__save" data-toggle="tooltip" data-placement="top" title="Bookmark">
                                                                             <FiHeart />

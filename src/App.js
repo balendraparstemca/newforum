@@ -67,7 +67,7 @@ function App() {
           <Route exact path="/all-locations" component={AllLocations} />
           <Route exact path="/top-place" component={TopPlaces} />
          <Route exact path="/listing-list" exact component={ListHeader} />
-          <Route exact path="/listing-list/:catid" exact component={CategoryListHeader} />
+          <Route exact path="/listing-list/:category" exact component={ListHeader} />
           <Route exact path="/list-map-view" component={ListMapView} />
           <Route exact path="/list-map-view2" component={ListMapView2} />
           <Route exact path="/list-left-sidebar" component={ListLeftSidebar} />
