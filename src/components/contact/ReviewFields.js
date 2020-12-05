@@ -74,7 +74,7 @@ class ReviewFields extends Component {
                 star:''
 
             })
-            this.props.dispatch(getlistreview({"listing_id":this.props.listingid}))
+            this.props.fetchlistcomment(this.props.listingid)
         });
     }
 

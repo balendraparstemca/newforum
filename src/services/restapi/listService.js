@@ -131,8 +131,29 @@ class ListService {
         });
     }
 
+    getpeopleviewList(obj) {
+        return axios.post(API_URL + "people_viewed_list", obj).then((response) => {
+            console.log(response.data)
+            return response.data;
+        });
+    }
+    
+    getsimilarList(obj) {
+        return axios.post(API_URL + "similar_list", obj).then((response) => {
+            console.log(response.data)
+            return response.data;
+        });
+    }
+
     saveListing(obj) {
         return axios.post(API_URL + "save_list", obj).then((response) => {
+            console.log(response.data)
+            return response.data;
+        });
+    }
+
+    viewListing(obj) {
+        return axios.post(API_URL + "view_list", obj).then((response) => {
             console.log(response.data)
             return response.data;
         });

@@ -11,6 +11,8 @@ import moment from 'moment';
 import SweetAlert from 'react-bootstrap-sweetalert'
 import { BsFillAlarmFill, BsFillBookmarkFill, BsFillExclamationCircleFill, BsLink45Deg, BsPeopleCircle, BsPersonCheck, BsPersonFill, BsThreeDotsVertical } from 'react-icons/bs';
 import { AiFillDelete } from 'react-icons/ai';
+import { Button } from 'react-bootstrap';
+import { FiRefreshCw } from 'react-icons/fi';
 
 const shortby = [
     {
@@ -19,44 +21,17 @@ const shortby = [
     },
     {
         value: 1,
-        label: 'Short by default'
+        label: 'TOP'
     },
     {
         value: 2,
-        label: 'High Rated'
+        label: 'New'
     },
     {
         value: 3,
-        label: 'Most Reviewed'
+        label: 'Old'
     },
-    {
-        value: 4,
-        label: 'Popular Listing'
-    },
-    {
-        value: 5,
-        label: 'Newest Listing'
-    },
-    {
-        value: 6,
-        label: 'Older Listing'
-    },
-    {
-        value: 7,
-        label: 'Price: low to high'
-    },
-    {
-        value: 8,
-        label: 'Price: high to low'
-    },
-    {
-        value: 9,
-        label: 'Price: high to low'
-    },
-    {
-        value: 10,
-        label: 'Random listing'
-    }
+
 ]
 
 class PostHeader extends Component {
@@ -68,7 +43,8 @@ class PostHeader extends Component {
             community: '',
             reporttext: "",
             img: require('../../assets/images/post.png'),
-            userimg: require('../../assets/images/testi-img2.jpg')
+            userimg: require('../../assets/images/testi-img2.jpg'),
+            allpost: []
         }
 
     }
@@ -206,7 +182,11 @@ class PostHeader extends Component {
             { selectedShortby }
         );
     }
+
+
+
     render() {
+
         return (
             <>
 
@@ -215,10 +195,15 @@ class PostHeader extends Component {
                         <div className="row">
                             <div className="col-lg-12">
                                 <div className="generic-header margin-bottom-30px">
-                                    <p className="showing__text text-left">
-                                        {this.state.title}
-                                    </p>
-                                    <div className="short-option mr-3">
+                                    <div className="showing__text mr-1 margin-left-2px">
+                                        <Select
+                                            value={this.selectedShortby}
+                                            onChange={this.handleChangeshortby}
+                                            placeholder="Short by"
+                                            options={shortby}
+                                        />
+                                    </div>
+                                    <div className="showing__text mr-1">
                                         <Select
                                             value={this.selectedShortby}
                                             onChange={this.handleChangeshortby}
@@ -254,13 +239,22 @@ class PostHeader extends Component {
                                             {this.props.posts && this.props.posts.length === 0 ?
                                                 (<div className="central-meta item cardb margin-bottom-10px ">
 
-                                                    <div className="row center">
-                                                        <div className="widget">
-                                                            <div className="banermeta">
-                                                                <center>there is not post  </center>
-                                                                <Link to={`/r/${this.props.communityName && this.props.communityName.communityName}/submit`}>create post</Link>
-                                                            </div></div>
-                                                    </div></div>
+
+                                                    <div className="row">
+                                                        <div className="col-lg-12">
+                                                            <div className="widget">
+                                                                <div className="banermeta">
+                                                                    <center>there is not post  </center>
+                                                                    <Link to={`/forum/submit`}> <Button variant="danger color-white" size="lg" block>
+                                                                        create post
+
+                                                                    </Button></Link>
+                                                                </div></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
                                                 ) :
                                                 this.props.posts.map((post, i) => (
                                                     <div className="central-meta item cardb margin-bottom-10px" key={i}>
@@ -313,11 +307,21 @@ class PostHeader extends Component {
                                                             </div>
                                                             <hr></hr>
                                                         </div>
-                                                        <div className="section-block-2 margin-top-30px"></div>
+
                                                     </div>
 
                                                 ))
+
                                             }
+                                            <div className="row">
+                                                <div className="col-lg-12">
+                                                    <div className="button-shared text-center margin-top-30px">
+                                                        <Button variant="danger" className="border-0">
+                                                            Load More <span><FiRefreshCw /></span>
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </TabPanel>
 
@@ -326,12 +330,17 @@ class PostHeader extends Component {
                                             {this.props.posts && this.props.posts.length === 0 ?
                                                 (<div className="central-meta item cardb">
 
-                                                    <div className="row center">
-                                                        <div className="widget">
-                                                            <div className="banermeta">
-                                                                <center>there is not post  </center>
-                                                                <Link to={`/r/${this.props.communityName && this.props.communityName.communityName}/submit`}>create post</Link>
-                                                            </div></div>
+                                                    <div className="row">
+                                                        <div className="col-lg-12">
+                                                            <div className="widget">
+                                                                <div className="banermeta">
+                                                                    <center>there is not post  </center>
+                                                                    <Link to={`/forum/submit`}> <Button variant="danger color-white" size="lg" block>
+                                                                        create post
+
+                                                                    </Button></Link>
+                                                                </div></div>
+                                                        </div>
                                                     </div></div>
                                                 ) :
 
@@ -339,14 +348,14 @@ class PostHeader extends Component {
                                                     return (
                                                         <div className="card-item blog-card" key={i}>
                                                             <div className="dropdown">
-                                                                <a className="float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><BsThreeDotsVertical />
-                                                                </a>
+                                                                <p className="float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><BsThreeDotsVertical />
+                                                                </p>
 
                                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                    <a class="dropdown-item"><Link to={`/forum/post/edit/${item.canonicalurl}`} ><FaEdit /> Edit </Link></a>
-                                                                    <a class="dropdown-item" onClick={() => this.DeletePost(item.post_id)}> <AiFillDelete /> Delete</a>
-                                                                    <a class="dropdown-item" onClick={() => this.report(item.post_id)}><BsFillExclamationCircleFill /> Report</a>
-                                                                    <a class="dropdown-item " onClick={() => this.savePost(item.post_id)}><BsFillBookmarkFill /> save</a>
+                                                                    <p class="dropdown-item"><Link to={`/forum/post/edit/${item.canonicalurl}`} ><FaEdit /> Edit </Link></p>
+                                                                    <p class="dropdown-item" onClick={() => this.DeletePost(item.post_id)}> <AiFillDelete /> Delete</p>
+                                                                    <p class="dropdown-item" onClick={() => this.report(item.post_id)}><BsFillExclamationCircleFill /> Report</p>
+                                                                    <p class="dropdown-item " onClick={() => this.savePost(item.post_id)}><BsFillBookmarkFill /> save</p>
 
                                                                 </div>
 
@@ -369,20 +378,20 @@ class PostHeader extends Component {
 
                                                                             </li>
                                                                         </ul>
-                                                                        <Link to={`/post/${item.canonicalurl}`} className="card-image-wrap">
+                                                                        <Link to={`/forum/post/${item.canonicalurl}`} className="card-image-wrap">
 
                                                                             <div className="card-image">
-                                                                                { item.imgSrc ? <img src={`http://localhost:7999/api/v1/utilities/${item.imgSrc}`} alt="Blog Full Width" className="card__img" /> : ''}
+                                                                                {item.imgSrc ? <img src={`http://localhost:7999/api/v1/utilities/${item.imgSrc}`} alt="Blog Full Width" className="card__img" /> : ''}
                                                                             </div>
                                                                         </Link>
                                                                         <div>
                                                                             <div>
-                                                                                <Link to={{ pathname: `/post/${item.canonicalurl}`, aboutProps: { postid: item.post_id } }} style={{ textDecoration: 'none', color: 'black' }} className="thumbnail self" >
+                                                                                <Link to={{ pathname: `/forum/post/${item.canonicalurl}`, aboutProps: { postid: item.post_id } }} style={{ textDecoration: 'none', color: 'black' }} className="thumbnail self" >
                                                                                     <b> {item.title}</b></Link>
                                                                                 <a target="_blank" href={item.url}> {item.url.replace(/^https?\:\/\/www\./i, "").split('/')[0]}... <i className="fa fa-external-link" aria-hidden="true"></i></a> <span className="badge badge-secondary badge-pill">{item.flare_tag}</span>
 
                                                                                 <p>
-                                                                                    <Link to={`/r/${item.com_name}`}><b> <BsPeopleCircle /> r/{item.com_name}</b></Link> <BsFillAlarmFill /> <span>{moment(Number(item.post_time)).fromNow()}</span>
+                                                                                    <Link to={`/forum/r/${item.com_name}`}><b> <BsPeopleCircle /> r/{item.com_name}</b></Link> <BsFillAlarmFill /> <span>{moment(Number(item.post_time)).fromNow()}</span>
                                                                                 </p>
 
                                                                             </div>
@@ -396,6 +405,15 @@ class PostHeader extends Component {
                                                         </div>
                                                     )
                                                 })}
+                                            <div className="row">
+                                                <div className="col-lg-12">
+                                                    <div className="button-shared text-center margin-top-30px">
+                                                        <Button variant="danger" className="border-0">
+                                                            Load More <span><FiRefreshCw /></span>
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </TabPanel>

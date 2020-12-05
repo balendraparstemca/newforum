@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 
 class WidgetCategory extends Component {
     state = {
-        title: 'Categories',
+        title: 'Categories Community',
         lists: [
             {
                 cat: 'Restaurant',
@@ -56,7 +56,7 @@ class WidgetCategory extends Component {
                             {this.state.lists.map((item, i) => {
                                 return (
                                     <li className="mb-2 pb-2" key={i}>
-                                        <Link to={item.url} className="d-flex justify-content-between align-items-center before-none">
+                                        <Link to="" className="d-flex justify-content-between align-items-center before-none">
                                             {item.cat} <span>{item.catNum}</span>
                                         </Link>
                                     </li>

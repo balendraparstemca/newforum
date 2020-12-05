@@ -67,6 +67,14 @@ class PostService {
     });
   }
 
+  getHomePost() {
+    return axios.get(API_URL + "home_posts").then((response) => {
+      console.log(response);
+
+      return response.data;
+    });
+  }
+
   getPostDetail(obj) {
     return axios.post(API_URL + "post_detail", obj).then((response) => {
       console.log(response);

@@ -16,6 +16,7 @@ import ClientLogo from "../../components/sliders/ClientLogo";
 import NewsLetter from "../../components/other/cta/NewsLetter";
 import Footer from "../../components/common/footer/Footer";
 import ScrollTopBtn from "../../components/common/ScrollTopBtn";
+import BrowseCategoriesTwo from '../../components/other/categories/BrowseCategoriesTwo';
 
 
 export default class Home extends Component {
@@ -68,30 +69,23 @@ export default class Home extends Component {
                 <BannerOne />
 
                 {/* Popular Categories */}
-                <section className="cat-area padding-top-100px padding-bottom-90px">
+                <section className="cat-area padding-top-10px padding-bottom-10px">
                     <div className="container">
                         <div className="row section-title-width text-center">
-                            <SectionsHeading title="Most Popular Categories" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
+                            <SectionsHeading title="Browse by Categories" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
                         </div>
                         <div className="row mt-5">
-                            <PopularCategories />
+                          
+                           <PopularCategories/>
                         </div>
                     </div>
                 </section>
 
                 {/* How It Work */}
-                <section className="hiw-area text-center padding-top-100px padding-bottom-110px">
-                    <div className="container">
-                        <div className="row section-title-width text-center">
-                            <SectionsHeading title="Plan The Vacation of Your Dreams" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
-                        </div>
-
-                        <HowItWorkOne />
-                    </div>
-                </section>
+               
 
                 {/* Most Visited Place */}
-                <section className="card-area text-center padding-bottom-100px">
+                <section className="card-area text-center padding-bottom-10px">
                     <div className="container">
                         <div className="row section-title-width text-center">
                             <SectionsHeading title="Most Visited Places" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
@@ -101,19 +95,10 @@ export default class Home extends Component {
                     </div>
                 </section>
 
-                {/* FunFacts */}
-                <section className="funfact-area section-bg-2 padding-top-100px padding-bottom-50px text-center">
-                    <div className="container">
-                        <div className="row section-title-width">
-                            <SectionsHeading title="Numbers Say Everything" titleClass="text-white" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
-                        </div>
-
-                        <FunFactsOne />
-                    </div>
-                </section>
+              
 
                 {/* How It Word */}
-                <section className="hiw-area padding-top-100px padding-bottom-80px after-none text-center">
+                <section className="hiw-area padding-top-10px padding-bottom-10px after-none text-center">
                     <div className="container">
                         <div className="row section-title-width text-center">
                             <SectionsHeading title="What We Offer" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
@@ -124,7 +109,7 @@ export default class Home extends Component {
                 </section>
 
                 {/* CTA */}
-                <section className="cta-area section-bg column-sm-center padding-top-80px padding-bottom-80px">
+                <section className="cta-area section-bg column-sm-center padding-top-10px padding-bottom-10px">
                     {this.ctaimages.images.map((img, index) => {
                         return (
                             <img src={img.img} key={index} alt="Cta Symble" className="symble-img"/>
@@ -145,24 +130,6 @@ export default class Home extends Component {
                     </div>
                 </section>
 
-                {/* Testimonial */}
-                <section className="testimonial-area padding-top-100px padding-bottom-100px text-center">
-                    {this.tmimages.tmimage.map((tmimg, index) => {
-                        return (
-                            <img key={index} src={tmimg.tmimg} alt="testimonial" className="random-img" />
-                        )
-                    })}
-                    <div className="container">
-                        <div className="row section-title-width text-center">
-                            <SectionsHeading title="What Our Users Said" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-8 mx-auto mt-4">
-                                <Testimonial />
-                            </div>
-                        </div>
-                    </div>
-                </section>
 
                 <SectionDivider />
 
@@ -184,10 +151,7 @@ export default class Home extends Component {
                     </div>
                 </section>
 
-                {/* CTA 2 */}
-                <section className="cta-area cta-area3 padding-top-100px padding-bottom-100px section-bg">
-                    <CtaOne />
-                </section>
+              
 
                 {/* Client Logo */}
                 <ClientLogo />

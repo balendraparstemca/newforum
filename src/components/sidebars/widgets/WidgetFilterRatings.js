@@ -57,21 +57,43 @@ class WidgetFilterRatings extends Component {
                     <div className="title-shape"></div>
                     <ul className="rating-list mt-4">
 
-                        {this.state.ratings.map((item, index) => {
-                            return (
-                                <li key={index}>
-                                    {item.icons.map((icon, i) => {
-                                        return <span key={i} className="la-star">{icon}</span>
-                                    })}
-
-                                    <label className="review-label">
-                                        <input type="radio" defaultChecked={item.active ? 'checked' : ''} name="review-radio" />
+                            
+                                <li>
+                                  <span className="la-star"><MdStar /> <MdStar /> <MdStar /> <MdStar /> <MdStar /></span>
+                                  <label className="review-label">
+                                        <input type="radio" name="review-radio" />
                                         <span className="review-mark"></span>
                                     </label>
                                 </li>
-                            )
-                        })}
-
+                                <li>
+                                  <span className="la-star"><MdStar /> <MdStar />  <MdStar /> <MdStar /></span>
+                                  <label className="review-label">
+                                        <input type="radio" name="review-radio" />
+                                        <span className="review-mark"></span>
+                                    </label>
+                                </li>
+                                <li>
+                                  <span className="la-star"><MdStar />  <MdStar /> <MdStar /></span>
+                                  <label className="review-label">
+                                        <input type="radio" name="review-radio" />
+                                        <span className="review-mark"></span>
+                                    </label>
+                                </li>
+                                <li>
+                                  <span className="la-star"><MdStar />  <MdStar /></span>
+                                  <label className="review-label">
+                                        <input type="radio" name="review-radio" />
+                                        <span className="review-mark"></span>
+                                    </label>
+                                </li>
+                                <li>
+                                  <span className="la-star"> <MdStar /></span>
+                                  <label className="review-label">
+                                        <input type="radio" name="review-radio" />
+                                        <span className="review-mark"></span>
+                                    </label>
+                                </li>
+                          
                     </ul>
                 </div>
             </>

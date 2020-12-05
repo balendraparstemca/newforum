@@ -42,7 +42,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FilesUploadComponent from './components/imageupload';
 import EditListing from './pages/dashboard/EditListing';
-import categoryListinggrid from './pages/listings/categoryListinggrid';
 import userdashboard from './pages/blogs/userdashboard';
 import newpost from './pages/blogs/newpost';
 import newcommunity from './pages/blogs/newcommunity';
@@ -60,13 +59,14 @@ function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/index2" component={Home2} />
-          <Route exact  path="/index3" component={Home3} />
+          <Route exact path="/index3" component={Home3} />
           <Route exact path="/index4" component={Home4} />
           <Route exact path="/index5" component={Home5} />
           <Route exact path="/all-categories" component={AllCategories} />
           <Route exact path="/all-locations" component={AllLocations} />
           <Route exact path="/top-place" component={TopPlaces} />
-         <Route exact path="/listing-list" exact component={ListHeader} />
+          <Route exact path="/listing-list" exact component={ListHeader} />
+          <Route exact path="/listing-grid" exact component={ListRightSidebar} />
           <Route exact path="/listing-list/:category" exact component={ListHeader} />
           <Route exact path="/list-map-view" component={ListMapView} />
           <Route exact path="/list-map-view2" component={ListMapView2} />
@@ -85,11 +85,11 @@ function App() {
           <Route exact path="/about" component={About} />
           <Route exact path="/faq" component={Faq} />
           <Route exact path="/contact" component={Contact} />
-          <Route  exact path="/recover" component={RecoverPassword} />
-          <Route path="/forum" exact  component={BlogFullWidth} />
-          <Route path="/forum/home" exact  component={BlogFullWidth} />
-          <Route path="/forum/submit" exact  component={newpost} />
-          <Route path="/forum/submit/:communityname" exact  component={newpost} />
+          <Route exact path="/recover" component={RecoverPassword} />
+          <Route path="/forum" exact component={BlogFullWidth} />
+          <Route path="/forum/home" exact component={BlogFullWidth} />
+          <Route path="/forum/submit" exact component={newpost} />
+          <Route path="/forum/submit/:communityname" exact component={newpost} />
           <Route path="/forum/newcommunity" exact component={newcommunity} />
           <Route path="/forum/r/:communityurl" exact component={communitydashboard} />
           <Route path="/forum/user/:username" exact component={userdashboard} />

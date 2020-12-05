@@ -226,15 +226,7 @@ class CommunityDashboard extends Component {
                                                             <CommunitySidebar categoryid={this.state.communitydetail && this.state.communitydetail.category} />
                                                         </div>
                                                     </div>
-                                                    <div className="row">
-                                                        <div className="col-lg-12">
-                                                            <div className="button-shared text-center">
-                                                                <Button text="load more listing" url="#" className="border-0">
-                                                                    <span><FiRefreshCw /></span>
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                  
                                                 </div>
                                             </section>
                                         </TabPanel>
@@ -281,15 +273,7 @@ class CommunityDashboard extends Component {
                                                             <CommunitySidebar categoryid={this.state.communitydetail && this.state.communitydetail.category} />
                                                         </div>
                                                     </div>
-                                                    <div className="row">
-                                                        <div className="col-lg-12">
-                                                            <div className="button-shared text-center">
-                                                                <Button text="load more listing" url="#" className="border-0">
-                                                                    <span><FiRefreshCw /></span>
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    
                                                 </div>
                                             </section>
                                         </TabPanel>

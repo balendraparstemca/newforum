@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import GeneralHeader from "../../components/common/GeneralHeader";
 import { GiPositionMarker, GiChickenOven } from 'react-icons/gi'
 import { MdStar, MdStarBorder, MdClose } from 'react-icons/md'
+import OwlCarousel from 'react-owl-carousel';
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel/dist/assets/owl.theme.default.css';
 import { BsPencil } from 'react-icons/bs';
-import { AiOutlineFlag } from 'react-icons/ai';
-import { FaFacebookF, FaTwitter, FaInstagram, FaTumblr, FaSnapchatGhost, FaGooglePlusG, FaPinterest, FaVk, FaLinkedinIn, FaYoutube, FaRegEnvelope } from 'react-icons/fa'
+import { AiOutlineEye, AiOutlineFlag } from 'react-icons/ai';
+import { FaFacebookF, FaTwitter,  FaGooglePlusG,  FaLinkedinIn, FaYoutube, FaRegEnvelope, FaRegCalendarCheck } from 'react-icons/fa'
 import { RiBookmarkLine, RiSendPlane2Line } from 'react-icons/ri';
 import ListingDetailsGallery from "../../components/sliders/ListingDetailsGallery";
 import { BsCheckCircle } from 'react-icons/bs'
@@ -13,17 +16,20 @@ import ModalVideo from 'react-modal-video'
 import { Link } from "react-router-dom";
 import GeneralMap from "../../components/contact/GeneralMap";
 import ListingDetailsComments from "../../components/contact/ListingDetailsComments";
-import PlaceOne from "../../components/places/PlaceOne";
 import NewsLetter from "../../components/other/cta/NewsLetter";
 import Footer from "../../components/common/footer/Footer";
 import ScrollTopBtn from "../../components/common/ScrollTopBtn";
-import { getListAmenties, getListDetail, getListFullDetail, getlistimage, getlistreview, getListShedule, reportList, saveList } from '../../services/action/list';
+import { getListAmenties, getListDetail, getListFullDetail, getlistimage, getlistreview, getListShedule, getpeopleviewList, getsimilarviewList, reportList, saveList, viewList } from '../../services/action/list';
 import { connect } from "react-redux";
 import $ from 'jquery';
-import { FiExternalLink, FiPhone } from 'react-icons/fi';
+import moment from 'moment';
+import ReactStars from "react-rating-stars-component";
+import { FiExternalLink, FiHeart, FiPhone } from 'react-icons/fi';
 import WidgetOpenHours from '../../components/sidebars/widgets/WidgetOpenHours';
 import WidgetSimilarListing from '../../components/sidebars/widgets/WidgetSimilarListing';
 import WidgetSubscribe from '../../components/sidebars/widgets/WidgetSubscribe';
+import { IoIosCheckmarkCircle, IoIosLink } from 'react-icons/io';
+import PlaceOne from '../../components/places/PlaceOne';
 class ListingDetails extends Component {
     constructor(props) {
         super(props)
@@ -31,13 +37,14 @@ class ListingDetails extends Component {
         this.state = {
             isloading: false,
             authorImg: require('../../assets/images/testi-img2.jpg'),
-            file:'',
+            file: '',
             authorName: 'Mark Williamson',
             isOpen: false,
             listImg: '',
             listName: '',
             listbio: '',
             address: '',
+            city: '',
             country: '',
             listingid: null,
             verifiedtxt: "",
@@ -56,58 +63,9 @@ class ListingDetails extends Component {
             reporttext: " ",
             tags: '',
             categoryname: '',
-            shareLinks: [
-                {
-                    icon: <FaFacebookF />,
-                    title: 'facebook',
-                    url: 'https://facebook.com'
-                },
-                {
-                    icon: <FaTwitter />,
-                    title: 'twitter',
-                    url: 'https://twitter.com'
-                },
-                {
-                    icon: <FaInstagram />,
-                    title: 'twitter',
-                    url: 'https://instagram.com'
-                },
-                {
-                    icon: <FaTumblr />,
-                    title: 'tumblr',
-                    url: 'https://tumblr.com'
-                },
-                {
-                    icon: <FaSnapchatGhost />,
-                    title: 'snapchat',
-                    url: 'https://snapchat.com'
-                },
-                {
-                    icon: <FaGooglePlusG />,
-                    title: 'google plus',
-                    url: 'https://plus.google.com'
-                },
-                {
-                    icon: <FaPinterest />,
-                    title: 'pinterest',
-                    url: 'https://pinterest.com'
-                },
-                {
-                    icon: <FaVk />,
-                    title: 'vkontakte',
-                    url: 'https://vkontakte.com'
-                },
-                {
-                    icon: <FaLinkedinIn />,
-                    title: 'linkedin',
-                    url: 'https://linkedin.com'
-                },
-                {
-                    icon: <FaYoutube />,
-                    title: 'youtube',
-                    url: 'https://youtube.com'
-                }
-            ],
+            categoryid:null,
+            viewlisting:[]
+
 
         }
         this.openModal = this.openModal.bind(this)
@@ -137,6 +95,32 @@ class ListingDetails extends Component {
         this.props.dispatch(saveList(obj));
     }
 
+    UserViewedList = (listid) => {
+        const obj = {
+            listing_id: listid,
+            view_by: this.props.userdetails.id,
+        }
+
+        this.props.dispatch(viewList(obj));
+    }
+
+    peopleviewedList =async (country, state, city) => {
+        const obj = {
+            "city": city,
+            "state": state,
+            "country": country,
+        }
+       await this.props.dispatch(getpeopleviewList(obj)).then(()=>{
+            this.setState({
+                viewlisting:this.props.viewedlists
+            })
+        })
+
+    }
+
+ 
+
+
     onReport = (listid) => {
         const obj = {
             listing_id: listid,
@@ -161,25 +145,32 @@ class ListingDetails extends Component {
             let obj = { "canonicalurl": this.props.match.params.listurl }
             this.props.dispatch(getListDetail(obj)).then(() => {
                 if (this.props.listdetail) {
+                    this.UserViewedList(this.props.listdetail.listing_id)
                     this.setState({
                         listName: this.props.listdetail && this.props.listdetail.list_title,
                         listbio: this.props.listdetail && this.props.listdetail.description,
                         address: this.props.listdetail && this.props.listdetail.address,
+                        state: this.props.listdetail && this.props.listdetail.state,
+                        city: this.props.listdetail && this.props.listdetail.city,
                         listImg: this.props.listdetail && this.props.listdetail.bannerimg ? <img src={`http://localhost:7999/api/v1/utilities/${this.props.listdetail.bannerimg}`} alt='list-profile' /> : <img src={this.state.file} alt='default-list-profile' />,
-                        file:this.props.listdetail && this.props.listdetail.bannerimg ? `http://localhost:7999/api/v1/utilities/${this.props.listdetail.bannerimg}` : require('../../assets/images/img24.jpg'),
-                        listingid:this.props.listdetail && this.props.listdetail.listing_id,
+                        file: this.props.listdetail && this.props.listdetail.bannerimg ? `http://localhost:7999/api/v1/utilities/${this.props.listdetail.bannerimg}` : require('../../assets/images/img24.jpg'),
+                        listingid: this.props.listdetail && this.props.listdetail.listing_id,
                         verifiedtxt: this.props.listdetail && this.props.listdetail.approved ? 'Verified list' : 'Not Verified Yet',
                         country: this.props.listdetail && this.props.listdetail.country,
                         lagnitude: this.props.listdetail && this.props.listdetail.lagnitude,
                         latitude: this.props.listdetail && this.props.listdetail.latitude,
                         tags: this.props.listdetail && this.props.listdetail.keywords.replace(/,/g, ' '),
-                        categoryname: this.props.listdetail && this.props.listdetail.categoryname
+                        categoryname: this.props.listdetail && this.props.listdetail.categoryname,
+                        categoryid:this.props.listdetail && this.props.listdetail.categoryid
+                       
                     })
                     this.fetchlistfullDeatil();
                     this.props.dispatch(getListAmenties({ "listing_id": this.props.listdetail && this.props.listdetail.listing_id }));
                     this.fetchImage(this.props.listdetail && this.props.listdetail.listing_id);
                     this.fetchlistshedule(this.props.listdetail && this.props.listdetail.listing_id);
                     this.props.dispatch(getlistreview({ "listing_id": this.props.listdetail && this.props.listdetail.listing_id }))
+                    this.peopleviewedList(this.props.listdetail.country, this.props.listdetail.state, this.props.listdetail.city)
+                   
                 } else {
                     this.props.history.push("/error");
                     window.location.reload();
@@ -229,6 +220,21 @@ class ListingDetails extends Component {
         })
     }
 
+    responsive = {
+        // breakpoint from 0 up
+        0: {
+            items: 1
+        },
+        // breakpoint from 480 up
+        480: {
+            items: 2
+        },
+        // breakpoint from 768 up
+        768: {
+            items: 3
+        }
+    }
+
     openModal() {
         this.setState({ isOpen: true })
     }
@@ -236,7 +242,7 @@ class ListingDetails extends Component {
     contentstate = {
         featureTitle: 'Features',
         videoTitle: 'Video',
-      buttonText: 'Watch Video',
+        buttonText: 'Watch Video',
         mapTitle: 'Location',
         peopleViewtitle: 'People Also Viewed'
     }
@@ -253,7 +259,7 @@ class ListingDetails extends Component {
                 <GeneralHeader />
 
                 {/* Breadcrumb */}
-                <section className="breadcrumb-area listing-detail-breadcrumb" style={{backgroundImage: 'url('+ this.state.file +')'}}>
+                <section className="breadcrumb-area listing-detail-breadcrumb" style={{ backgroundImage: 'url(' + this.state.file + ')' }}>
                     <div className="breadcrumb-wrap">
                         <div className="container">
                             <div className="row">
@@ -263,7 +269,7 @@ class ListingDetails extends Component {
                                             {this.state.listName}
                                         </h2>
                                         <p className="breadcrumb__desc">
-                                            <span className="la d-inline-block"><GiPositionMarker /></span> {this.state.address} {this.state.country}
+                                            <span className="la d-inline-block"><GiPositionMarker /></span> {this.state.address} , {this.state.city}, {this.state.state},  {this.state.country}
                                         </p>
                                         <ul className="listing-info mt-3 mb-3">
                                             <li>
@@ -552,7 +558,7 @@ class ListingDetails extends Component {
                                         </ul>
 
                                         <WidgetOpenHours />
-                                        <WidgetSimilarListing />
+                                        <WidgetSimilarListing categoryid={this.state.categoryid && this.state.categoryid} country={this.state.country && this.state.country} city={this.state.city && this.state.city} state={this.state.state && this.state.state} />
                                         <WidgetSubscribe />
 
                                     </div>
@@ -575,7 +581,104 @@ class ListingDetails extends Component {
                                 </div>
                             </div>
                         </div>
-                        <PlaceOne />
+
+                
+                        <div className="row">
+                <div className="col-lg-12">
+
+                    <OwlCarousel
+                        className="card-carousel mt-5"
+                        loop={false}
+                        center={false}
+                        margin={10}
+                        autoplay={true}
+                        nav={true}
+                        navText={[
+                            "<i class='icon icon-left'></i>",
+                            "<i class='icon icon-right'></i>"
+                        ]}
+                        rewind={true}
+                        items={3}
+                        smartSpeed={10000}
+                        animateOut={"slideOutDown"}
+                        animateIn={"fadeIn"}
+                        responsive={this.responsive}
+                    >
+                        { this.props.viewedlists && this.props.viewedlists.map((item, index) => {
+                            return (
+                                <div className="card-item" key={index}>
+                                    <Link to={`/listing-details/${item.listing.canonicalurl}`} className="card-image-wrap">
+                                        <div className="card-image">
+                                            <img src={item.listing.bannerimg ? `http://localhost:7999/api/v1/utilities/${item.listing.bannerimg}` : this.state.listimage} className="card__img" alt={item.listing.list_title} />
+                                            <span className='badge'>{this.state.bedge}</span>
+                                            <span className="badge-toggle" data-toggle="tooltip" data-placement="bottom" title={item.listing.likes}>
+                                                <FiHeart />
+                                            </span>
+                                        </div>
+                                    </Link>
+                                    <div className="card-content-wrap">
+                                        <div className="card-content">
+                                            <Link to={`/listing-list/${item.listing.categoryid}`}>
+                                                <h5 className="card-meta">
+                                                    <span></span> {item.listing.categoryname}
+                                                </h5>
+                                            </Link>
+                                            <Link to={`/listing-details/${item.listing.canonicalurl}`}>
+
+                                                <h4 className="card-title">{item.listing.list_title}
+                                                    <i><IoIosCheckmarkCircle /></i>
+                                                </h4>
+                                                <p className="card-sub">
+                                                    {item.listing.address}
+                                                </p>
+                                            </Link>
+                                            <Link to={`/user-profile/${item.listing.username}`} className="author-img" >
+                                                <img src={item.listing.profileimg ? `http://localhost:7999/api/v1/utilities/${item.listing.profileimg}` : this.state.author} alt="author-img" />
+                                            </Link>
+                                            <ul className="info-list padding-top-20px">
+                                                <li><span className="la d-inline-block"><FiPhone /></span> {item.listing.phone}</li>
+                                                <li><span className="la d-inline-block"><IoIosLink /></span>  <a target="_blanc" href={item.listing.website}>
+                                                    {item.listing.website.replace(/^https:\/\//, '')}
+                                                </a>
+                                                </li>
+                                                <li>
+                                                    <span className="la d-inline-block"><FaRegCalendarCheck /></span>posted {moment(Number(item.listing.creating_time)).fromNow()}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div className="rating-row">
+                                            <div className="rating-rating">
+                                                <span> <ReactStars
+                                                    count={5}
+                                                    size={24}
+                                                    value={item.rating[0].rating ? parseFloat(item.rating[0].rating).toFixed(1) : 0}
+                                                    isHalf={true} /> </span><span> - </span>
+                                                <span className="rating-count"> {parseFloat(item.rating[0].rating).toFixed(1)}</span>
+
+                                            </div>
+                                            <div className="listing-info">
+                                                <ul>
+                                                    <li><span className="info__count"><AiOutlineEye /></span> {item.listing.view}</li>
+
+                                                    <li onClick={() => this.like(item.listing.listing_id)}>
+                                                        <span className="info__count">   <FiHeart /></span> {item.listing.likes}
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            )
+                        })}
+
+
+                    </OwlCarousel>
+
+                </div>
+            </div>
                     </div>
                 </section>
 
@@ -594,9 +697,9 @@ class ListingDetails extends Component {
 
 function mapStateToProps(state) {
     const { isLoggedIn, userdetails } = state.auth;
-    const { listdetail, listamenties, listallimage, allreviewlist, listfulldetail } = state.list;
+    const { listdetail, listamenties, viewedlists,similarlists, listallimage, allreviewlist, listfulldetail } = state.list;
     return {
-        isLoggedIn, userdetails, listdetail, listallimage, allreviewlist, listamenties, listfulldetail
+        isLoggedIn, userdetails, listdetail, listallimage,viewedlists, allreviewlist, listamenties, listfulldetail, similarlists
 
     };
 }

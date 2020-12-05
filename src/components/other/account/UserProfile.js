@@ -14,7 +14,7 @@ import Footer from "../../common/footer/Footer";
 import ScrollTopBtn from "../../common/ScrollTopBtn";
 import { userdetails } from '../../../services/action/user';
 import { connect } from "react-redux";
-import { getuserlist } from '../../../services/action/list';
+import { getuserlist, likeList } from '../../../services/action/list';
 import moment from 'moment';
 class UserProfile extends Component {
 
@@ -38,6 +38,22 @@ class UserProfile extends Component {
         this.fetchuserdetail();
     }
 
+    like = (listingid) => {
+        if (this.props.userdetails) {
+            const obj = {
+                listing_id: listingid,
+                like_by: this.props.userdetails.id
+            }
+            this.props.dispatch(likeList(obj)).then(() => {
+                this.fetchuserlist(this.props.udetails[0].id)
+
+            })
+        }
+        else {
+            alert("login first")
+        }
+    }
+
     fetchuserdetail = async () => {
         this.setState({ loading: true })
         let obj = { "userName": this.props.match.params.username }
@@ -47,7 +63,8 @@ class UserProfile extends Component {
                 this.setState({
                     userdetail: this.props.udetails[0],
                     img: this.props.udetails[0].profileimg ? `http://localhost:7999/api/v1/utilities/${this.props.udetails[0].profileimg}` : require('../../../assets/images/testi-img2.jpg'),
-                    name: this.props.udetails[0].userName
+                    name: this.props.udetails[0].userName,
+                    date: moment(Number(this.props.udetails[0].joined)).fromNow()
                 })
                 this.fetchuserlist(this.props.udetails[0].id)
 
@@ -122,9 +139,9 @@ class UserProfile extends Component {
                                         return (
                                             <div className="col-lg-4 column-td-6" key={index}>
                                                 <div className="card-item">
-                                                    <Link to={`/listing-details/${item.canonicalurl}`} className="card-image-wrap">
+                                                    <Link to={`/listing-details/${item.listing.canonicalurl}`} className="card-image-wrap">
                                                         <div className="card-image">
-                                                            <img src={item.bannerimg ? `http://localhost:7999/api/v1/utilities/${item.bannerimg}` : item.listimage} className="card__img" alt={item.list_title} />
+                                                            <img src={item.listing.bannerimg ? `http://localhost:7999/api/v1/utilities/${item.listing.bannerimg}` : item.listing.listimage} className="card__img" alt={item.listing.list_title} />
                                                             <span className='badge'>{this.state.bedge}</span>
                                                             <span className="badge-toggle" data-toggle="tooltip" data-placement="bottom" title={item.likes}>
                                                                 <FiHeart />
@@ -133,32 +150,32 @@ class UserProfile extends Component {
                                                     </Link>
                                                     <div className="card-content-wrap">
                                                         <div className="card-content">
-                                                            <Link to={`/listing-list/${item.categoryid}`}>
+                                                            <Link to={`/listing-list/${item.listing.categoryid}`}>
                                                                 <h5 className="card-meta">
-                                                                    <span></span> {item.categoryname}
+                                                                    <span></span> {item.listing.categoryname}
                                                                 </h5>
                                                             </Link>
 
-                                                            <Link to={`/listing-details/${item.canonicalurl}`}>
+                                                            <Link to={`/listing-details/${item.listing.canonicalurl}`}>
 
-                                                                <h4 className="card-title">{item.list_title}
-                                                                   { item.approved===1 ? <i><IoIosCheckmarkCircle /></i>:  <i><AiFillQuestionCircle /><Link to={`/listing-details/${item.canonicalurl}/edit`}>not verified</Link></i>}
+                                                                <h4 className="card-title">{item.listing.list_title}
+                                                                   { item.listing.approved===1 ? <i><IoIosCheckmarkCircle /></i>:  <i><AiFillQuestionCircle /><Link to={`/listing-details/${item.listing.canonicalurl}/edit`}>not verified</Link></i>}
                                                                 </h4>
                                                                 <p className="card-sub">
-                                                                    {item.address}
+                                                                    {item.listing.address}
                                                                 </p>
                                                             </Link>
-                                                            <Link to={`/user-profile/${item.username}`} className="author-img" >
-                                                                <img src={item.profileimg ? `http://localhost:7999/api/v1/utilities/${item.profileimg}` : this.state.author} alt="author-img" />
+                                                            <Link to={`/user-profile/${item.listing.username}`} className="author-img" >
+                                                                <img src={item.listing.profileimg ? `http://localhost:7999/api/v1/utilities/${item.listing.profileimg}` : this.state.author} alt="author-img" />
                                                             </Link>
                                                             <ul className="info-list padding-top-20px">
-                                                                <li><span className="la d-inline-block"><FiPhone /></span> {item.phone}</li>
-                                                                <li><span className="la d-inline-block"><IoIosLink /></span>  <a href={item.website}>
-                                                                    {item.website.replace(/^https:\/\//, '')}
+                                                                <li><span className="la d-inline-block"><FiPhone /></span> {item.listing.phone}</li>
+                                                                <li><span className="la d-inline-block"><IoIosLink /></span>  <a href={item.listing.website}>
+                                                                    {item.listing.website.replace(/^https:\/\//, '')}
                                                                 </a>
                                                                 </li>
                                                                 <li>
-                                                                    <span className="la d-inline-block"><FaRegCalendarCheck /></span>posted {moment(Number(item.creating_time)).fromNow()}
+                                                                    <span className="la d-inline-block"><FaRegCalendarCheck /></span>posted {moment(Number(item.listing.creating_time)).fromNow()}
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -168,9 +185,9 @@ class UserProfile extends Component {
                                                             </div>
                                                             <div className="listing-info">
                                                                 <ul>
-                                        <li><span className="info__count"></span> {item.likes}</li>
+                                        <li><span className="info__count"></span> {item.listing.likes}</li>
                                                                     <li>
-                                                                        <span className="info__save" data-toggle="tooltip" data-placement="top" title="Bookmark">
+                                                                        <span  onClick={()=>this.like(item.listing.listing_id)} className="info__save"   title="Bookmark">
                                                                             <FiHeart />
                                                                         </span>
                                                                     </li>

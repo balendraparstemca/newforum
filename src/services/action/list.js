@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { ADD_LIST_AMENTIES, CREATE_LISTING, GET_LIST_IMAGE, GET_LIST_AMENTIES, GET_LIST_DETAIL, GET_LIST_FULLDETAIL, SET_MESSAGE, UPDATE_LISTINGDETAIL, ADD_LIST_SHEDULE, GET_LIST_SHEDULE, POST_LIST_REVIEW, GET_LIST_REVIEW, GET_USER_LIST, GET_USER_SAVE_LIST, GET_HOME_LIST, GET_CATEGORY_LIST } from '../actionType';
+import { ADD_LIST_AMENTIES, CREATE_LISTING, GET_LIST_IMAGE, GET_LIST_AMENTIES, GET_LIST_DETAIL, GET_LIST_FULLDETAIL, SET_MESSAGE, UPDATE_LISTINGDETAIL, ADD_LIST_SHEDULE, GET_LIST_SHEDULE, POST_LIST_REVIEW, GET_LIST_REVIEW, GET_USER_LIST, GET_USER_SAVE_LIST, GET_HOME_LIST, GET_CATEGORY_LIST, GET_PEOPLE_VIEWED_LIST, GET_SIMILAR_LIST } from '../actionType';
 import ListService from "../restapi/listService";
 
 export const CreateListing = (obj) => (dispatch) => {
@@ -466,6 +466,32 @@ export const saveList = (obj) => (dispatch) => {
 }
 
 
+
+export const viewList = (obj) => (dispatch) => {
+
+    return ListService.viewListing(obj).then(
+        (response) => {
+            toast.success(response.message)
+
+            return Promise.resolve();
+        },
+        (error) => {
+
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            toast.error(message)
+
+            return Promise.reject();
+        }
+    );
+
+}
+
+
 export const likeList = (obj) => (dispatch) => {
 
     return ListService.likeListing(obj).then(
@@ -645,6 +671,72 @@ export const gethomeList = () => (dispatch) => {
             dispatch({
                 type: GET_HOME_LIST,
                 payload: { homelist: response.data }
+
+            });
+
+            toast.success(response.message)
+
+            return Promise.resolve();
+        },
+        (error) => {
+
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            toast.error(message)
+
+            return Promise.reject();
+        }
+    );
+
+}
+
+
+
+export const getpeopleviewList = (obj) => (dispatch) => {
+
+    return ListService.getpeopleviewList(obj).then(
+        (response) => {
+            console.log(response.data)
+
+            dispatch({
+                type: GET_PEOPLE_VIEWED_LIST,
+                payload: { viewlist: response.data }
+
+            });
+
+            toast.success(response.message)
+
+            return Promise.resolve();
+        },
+        (error) => {
+
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            toast.error(message)
+
+            return Promise.reject();
+        }
+    );
+
+}
+
+export const getsimilarviewList = (obj) => (dispatch) => {
+
+    return ListService.getsimilarList(obj).then(
+        (response) => {
+            console.log(response.data)
+
+            dispatch({
+                type: GET_SIMILAR_LIST,
+                payload: { similarlist: response.data }
 
             });
 

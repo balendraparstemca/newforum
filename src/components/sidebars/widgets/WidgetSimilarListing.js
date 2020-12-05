@@ -1,76 +1,40 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { BsEye } from 'react-icons/bs'
 import { MdStar, MdStarHalf } from 'react-icons/md'
 import Button from "../../common/Button";
-import {Link} from "react-router-dom";
+import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
+import moment from 'moment';
+import { getsimilarviewList } from '../../../services/action/list';
 
 class WidgetSimilarListing extends Component {
+
+
     state = {
         title: 'Similar Listings',
-        items: [
-            {
-                img: require('../../../assets/images/img34.jpg'),
-                title: 'The best sale marketer of the next year',
-                titleUrl: '/blog-single',
-                price: '$19.00',
-                cat: 'Gym & Fitness',
-                catUrl: '#',
-                stars: [
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStarHalf />,
-                ]
-            },
-            {
-                img: require('../../../assets/images/img35.jpg'),
-                title: 'How to make your ideas became true',
-                titleUrl: '/blog-single',
-                price: '$20.00',
-                cat: 'Restaurant',
-                catUrl: '#',
-                stars: [
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStarHalf />,
-                ]
-            },
-            {
-                img: require('../../../assets/images/img36.jpg'),
-                title: 'What gets in the way of strategy',
-                titleUrl: '/blog-single',
-                price: '$19.00',
-                cat: 'Art & Design',
-                catUrl: '#',
-                stars: [
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStarHalf />,
-                ]
-            },
-            {
-                img: require('../../../assets/images/img37.jpg'),
-                title: 'What gets in the way of strategy',
-                titleUrl: '/blog-single',
-                price: '$19.00',
-                cat: 'Outdoors',
-                catUrl: '#',
-                stars: [
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStar />,
-                    <MdStarHalf />,
-                ]
-            },
-        ]
+        listimg: require('../../../assets/images/img37.jpg'),
+        cmid:null
+
     }
+
+  
+
+    componentDidUpdate(prevProps) {
+        if (this.state.cmid !== this.props.categoryid) {
+            this.setState({ cmid: this.props.categoryid });
+            const obj = {
+                "city": this.props.city,
+                "country": this.props.country,
+                "state": this.props.state,
+                "categoryid": this.props.categoryid
+            }
+            this.props.dispatch(getsimilarviewList(obj));
+        }
+
+    }
+
     render() {
+      
         return (
             <>
                 <div className="sidebar-widget similar-widget">
@@ -80,29 +44,24 @@ class WidgetSimilarListing extends Component {
                     <div className="title-shape"></div>
                     <div className="similar-list padding-top-30px">
 
-                        {this.state.items.map((item, i) => {
+                        {this.props.similarlists && this.props.similarlists.map((item, i) => {
                             return (
                                 <div className="recent-item" key={i}>
                                     <div className="recent-img">
-                                        <Link to={item.titleUrl}>
-                                            <img src={item.img} alt="blog" />
+                                        <Link to={`/listing-details/${item.anonicalurl}`}>
+                                            <img src={item.bannerimg ? `http://localhost:7999/api/v1/utilities/${item.bannerimg}` : this.state.listimage} className="card__img" alt={item.list_title} />
+
                                         </Link>
                                     </div>
                                     <div className="recentpost-body">
                                         <h4 className="recent__link">
-                                            <Link to={item.titleUrl}>
-                                                {item.title}
+                                            <Link to={`/listing-details/${item.canonicalurl}`}>
+                                                {item.list_title}
                                             </Link>
                                         </h4>
-                                        <div className="rating-rating">
 
-                                            {item.stars.map((icon, i) => {
-                                                return <span key={i} className="la la-star">{icon}</span>
-                                            })}
-
-                                        </div>
                                         <p className="recent__meta">
-                                            <span className="color-text font-weight-bold">{item.price}</span> <Link to={item.catUrl}>{item.cat}</Link>
+                                            <span className="color-text font-weight-bold"></span> <Link to={`/listing-list/${item.categoryid}`}>{item.categoryname}</Link>
                                         </p>
                                     </div>
                                 </div>
@@ -121,4 +80,13 @@ class WidgetSimilarListing extends Component {
     }
 }
 
-export default WidgetSimilarListing;
+
+function mapStateToProps(state) {
+    const { isLoggedIn, userdetails } = state.auth;
+    const { listdetail, viewedlists, similarlists } = state.list;
+    return {
+        isLoggedIn, userdetails, listdetail, viewedlists, similarlists
+
+    };
+}
+export default connect(mapStateToProps)(WidgetSimilarListing);

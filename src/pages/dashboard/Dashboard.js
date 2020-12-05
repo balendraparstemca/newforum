@@ -4,7 +4,7 @@ import Breadcrumb from "../../components/common/Breadcrumb";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Link } from "react-router-dom";
 import { BsListCheck, BsBookmark, BsPencil, } from 'react-icons/bs'
-import { FaRegEdit, FaRegTrashAlt } from 'react-icons/fa'
+import { FaRegEdit, FaRegEnvelope, FaRegTrashAlt } from 'react-icons/fa'
 import { AiOutlineUser, AiOutlinePlusCircle, AiOutlinePoweroff, AiOutlineExclamationCircle } from 'react-icons/ai'
 import Button from "../../components/common/Button";
 import $ from 'jquery'
@@ -14,11 +14,17 @@ import ScrollTopBtn from "../../components/common/ScrollTopBtn";
 import { connect } from "react-redux";
 import { addImageprofile } from '../../services/action/auth';
 import { getuserlist, getusersavedlist, userUnsaveList } from '../../services/action/list';
+import SignInOptions from '../../components/other/account/SignInOptions';
+import { userdetails } from '../../services/action/user';
 
 class Dashboard extends Component {
 
     constructor(props) {
         super(props)
+        this.handleRegister = this.handleRegister.bind(this);
+        this.onChangeFirstname = this.onChangeFirstname.bind(this);
+        this.onChangeLastname = this.onChangeLastname.bind(this);
+        this.onChangeEmail = this.onChangeEmail.bind(this);
         this.uploadSingleFile = this.uploadSingleFile.bind(this)
         this.upload = this.upload.bind(this)
         this.state = {
@@ -28,26 +34,20 @@ class Dashboard extends Component {
             savedlist: [],
             userlist: [],
             userImg: require('../../assets/images/team2.jpg'),
-            userName: 'Mark Williamson',
-            userbio: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium',
-            address: '101 Parkview, New York',
-            phoneNum: '+7(111)123456789',
-            website: 'www.techydevs.com',
+            userName: '',
+            userbio: '',
+            address: '',
+            phoneNum: '',
+            website: '',
+            email: "",
+            firstname: "",
+            lastname: "",
+
         }
     }
 
     componentDidMount() {
-
-        this.props.dispatch((getuserlist(this.props.userdetails.id))).then(() => {
-            this.setState({
-                userlist: this.props.alluserlist
-            })
-        })
-        this.props.dispatch((getusersavedlist(this.props.userdetails.id))).then(() => {
-            this.setState({
-                savedlist: this.props.usersavedlist
-            })
-        })
+        this.userd()
 
         $(document).on('click', '.delete-account-info .delete-account, .card-item .card-content-wrap .delete-btn', function (e) {
             $('body').addClass('modal-open').css({ paddingRight: '17px' });
@@ -66,6 +66,79 @@ class Dashboard extends Component {
         });
 
     }
+
+    userd = () => {
+        let obj = { "userName": this.props.userdetails.userName }
+
+        this.props.dispatch(userdetails(obj)).then(() => {
+            this.getusersavedlist(this.props.udetails[0].id)
+            this.getuserlist(this.props.udetails[0].id)
+            this.setState({
+                userdetail: this.props.udetails[0],
+                userName: this.props.udetails[0].userName,
+                email: this.props.udetails[0].emailId,
+                firstname: this.props.udetails[0].firstName,
+                lastname: this.props.udetails[0].lastName,
+                file: this.props.udetails[0].profileimg ? `http://localhost:7999/api/v1/utilities/${this.props.udetails[0].profileimg}` : require('../../assets/images/team2.jpg')
+            })
+        })
+
+    }
+
+    getusersavedlist = (userid) => {
+        this.props.dispatch((getusersavedlist(userid))).then(() => {
+            this.setState({
+                savedlist: this.props.usersavedlist
+            })
+        })
+    }
+
+
+    getuserlist = (userid) => {
+        this.props.dispatch((getuserlist(userid))).then(() => {
+            this.setState({
+                userlist: this.props.alluserlist
+            })
+        })
+
+    }
+
+
+
+    onChangeFirstname(e) {
+        this.setState({
+            firstname: e.target.value,
+        });
+
+    }
+
+    onChangeLastname(e) {
+        this.setState({
+            lastname: e.target.value,
+        });
+
+    }
+
+    onChangeEmail(e) {
+        this.setState({
+            email: e.target.value,
+        });
+    }
+
+    handleRegister(e) {
+        e.preventDefault();
+        this.setState({
+            loading: true,
+        });
+
+        //this.props.dispatch(registerUser(this.state.firstname, this.state.lastname, this.state.email)).then(() => {
+        //  this.setState({
+        //    loading: false,
+        //});
+        // })
+
+    }
+
 
     uploadSingleFile(e) {
         this.setState({
@@ -91,11 +164,7 @@ class Dashboard extends Component {
             saved_by: this.props.userdetails.id
         }
         this.props.dispatch(userUnsaveList(obj)).then(() => {
-            this.props.dispatch((getusersavedlist(this.props.userdetails.id))).then(() => {
-                this.setState({
-                    savedlist: this.props.usersavedlist
-                })
-            })
+            this.getusersavedlist(this.state.userdetail.id)
         })
 
         console.log(obj);
@@ -188,6 +257,70 @@ class Dashboard extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-lg-8">
+
+
+                                                    <div className="billing-form-item mb-0">
+
+                                                        <div className="billing-content">
+                                                            <div className="contact-form-action">
+                                                                <form method="post" onSubmit={this.handleRegister}>
+                                                                    <div className="row">
+
+                                                                        <div className="col-lg-12">
+                                                                            <div className="input-box">
+                                                                                <label className="label-text">First name</label>
+                                                                                <div className="form-group">
+                                                                                    <span className="form-icon">
+                                                                                        <AiOutlineUser />
+                                                                                    </span>
+                                                                                    <input className="form-control" type="text" placeholder="First name" name="firstname" value={this.state.firstname} onChange={this.onChangeFirstname} required="required" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className="col-lg-12">
+                                                                            <div className="input-box">
+                                                                                <label className="label-text">Last name</label>
+                                                                                <div className="form-group">
+                                                                                    <span className="form-icon">
+                                                                                        <AiOutlineUser />
+                                                                                    </span>
+                                                                                    <input className="form-control" type="text" name="lastname" value={this.state.lastname} onChange={this.onChangeLastname} required="required" placeholder="Last name" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className="col-lg-12">
+                                                                            <div className="input-box">
+                                                                                <label className="label-text">Email</label>
+                                                                                <div className="form-group">
+                                                                                    <span className="form-icon">
+                                                                                        <FaRegEnvelope />
+                                                                                    </span>
+                                                                                    <input className="form-control" type="email" required="required" name="email" value={this.state.email} onChange={this.onChangeEmail} placeholder="Enter email" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+
+
+                                                                        <div className="col-lg-12">
+                                                                            <div className="btn-box margin-top-20px margin-bottom-20px">
+                                                                                <button className="theme-btn border-0" type="submit" disabled={this.state.loading}>
+                                                                                    {this.state.loading && (
+                                                                                        <span className="spinner-border spinner-border-sm"></span>
+                                                                                    )} update account
+                                                           </button>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    {this.state.alert}
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
                                                     <div className="user-form-action">
                                                         <div className="billing-form-item">
                                                             <div className="billing-title-wrap">
@@ -228,20 +361,7 @@ class Dashboard extends Component {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="delete-account-info">
-                                                        <div className="billing-form-item">
-                                                            <div className="billing-title-wrap">
-                                                                <h3 className="widget-title pb-0 color-text">Delete Account</h3>
-                                                                <div className="title-shape margin-top-10px"></div>
-                                                            </div>
-                                                            <div className="delete-info-content p-4">
-                                                                <p className="mb-3">
-                                                                    <span className="text-warning">Warning:</span> Once you delete your account, there is no going back. Please be certain.
-                                                                </p>
-                                                                <Button text="delete my account" url="#" className="delete-account border-0" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                
                                                 </div>
                                             </div>
                                         </TabPanel>
@@ -253,22 +373,22 @@ class Dashboard extends Component {
                                                         return (
                                                             <div key={i} className="col-lg-4 column-td-6">
                                                                 <div className="card-item">
-                                                                    <Link to={`/listing-details/${item.canonicalurl}`} className="card-image-wrap">
+                                                                    <Link to={`/listing-details/${item.listing.canonicalurl}`} className="card-image-wrap">
                                                                         <div className="card-image">
-                                                                            <img src={`http://localhost:7999/api/v1/utilities/${item.bannerimg}`} className="card__img" alt="Card" />
+                                                                            <img src={`http://localhost:7999/api/v1/utilities/${item.listing.bannerimg}`} className="card__img" alt="Card" />
                                                                         </div>
                                                                     </Link>
                                                                     <div className="card-content-wrap">
                                                                         <div className="card-content">
-                                                                            <Link to={`/listing-details/${item.canonicalurl}`}>
-                                                                                <h4 className="card-title mt-0">{item.list_title}</h4>
-                                                                                <p className="card-sub">{item.address}</p>
+                                                                            <Link to={`/listing-details/${item.listing.canonicalurl}`}>
+                                                                                <h4 className="card-title mt-0">{item.listing.list_title}</h4>
+                                                                                <p className="card-sub">{item.listing.address}</p>
                                                                             </Link>
                                                                         </div>
                                                                         <div className="rating-row">
                                                                             <div className="edit-info-box">
                                                                                 <button type="button" className="theme-btn button-success border-0 mr-1">
-                                                                                    <Link to={`/listing-details/${item.canonicalurl}/edit`}><span className="la"><FaRegEdit /></span> Edit</Link>
+                                                                                    <Link to={`/listing-details/${item.listing.canonicalurl}/edit`}><span className="la"><FaRegEdit /></span> Edit</Link>
                                                                                 </button>
                                                                                 <button type="button" className="theme-btn delete-btn border-0" data-toggle="modal" data-target=".product-delete-modal">
                                                                                     <span className="la"><FaRegTrashAlt /></span> Delete
@@ -372,8 +492,9 @@ class Dashboard extends Component {
 function mapStateToProps(state) {
     const { isLoggedIn, userdetails } = state.auth;
     const { alluserlist, usersavedlist } = state.list;
+    const { udetails } = state.user;
     return {
-        isLoggedIn, userdetails, usersavedlist, alluserlist
+        isLoggedIn, userdetails, usersavedlist, alluserlist, udetails
 
     };
 }

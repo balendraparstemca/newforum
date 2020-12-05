@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
-import WidgetTags from "./widgets/WidgetTags";
-import WidgetSubscribe from "./widgets/WidgetSubscribe";
-import WidgetFollow from "./widgets/WidgetFollow";
 import { connect } from "react-redux";
-import WidgetPopularPost from "./widgets/WidgetPopularPost";
-import SocialProfile from '../other/account/SocialProfile';
-import { fetchCategory, fetchCommunityList } from '../../services/action/common';
+import {  fetchCommunityList } from '../../services/action/common';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import moment from 'moment';
+import { TiGroup } from 'react-icons/ti';
+import { Button } from 'react-bootstrap';
+import { BsEye } from 'react-icons/bs';
+import { FaBusinessTime, FaUserFriends } from 'react-icons/fa';
 class CommunitySidebar extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
             img: require('../../assets/images/default.png'),
-             communitydetails: {},
+            communitydetails: {},
             title: "All Category Lists",
             communitylist: [],
             catid: null,
-            lists:[]
+            lists: []
         }
     }
     componentDidMount() {
@@ -51,11 +50,15 @@ class CommunitySidebar extends Component {
 
 
     render() {
-       const {posts }= this.props
-
-        const lists = posts ? posts.map(com => {
-            return { url: `${com.flare_tag}`, text: `${com.flare_tag}` };
-        }) : [];
+        const { posts } = this.props
+        const map = new Map();
+        let lists = []
+        posts.map(com => {
+            if (!map.has(com.flare_tag)) {
+                map.set(com.flare_tag, true);    // set any value to Map
+                lists.push({ url: `${com.flare_tag}`, text: `${com.flare_tag}` })
+            }
+        })
         return (
             <>
                 <div className="sidebar section-bg">
@@ -68,8 +71,10 @@ class CommunitySidebar extends Component {
                                         r/{this.state.communitydetails && this.state.communitydetails.communityName}
                                     </b>
                                     <p className="author__meta">
-                                     created : { moment(Number(this.state.communitydetails && this.state.communitydetails.Date)).fromNow()}
+                                       <FaBusinessTime/> created : {moment(Number(this.state.communitydetails && this.state.communitydetails.Date)).fromNow()}
                                     </p>
+                                    <p className="author__meta">
+                                       <FaUserFriends/> Member : 12                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +104,7 @@ class CommunitySidebar extends Component {
                         </ul>
                     </div>
                     {/* related community */}
-                  {/*  <div className="sidebar-widget">
+                    {<div className="sidebar-widget">
                         <h3 className="widget-title">
                             Related community
                     </h3>
@@ -115,13 +120,13 @@ class CommunitySidebar extends Component {
                                          </Link>
 
                                         </li>
-                                    ) : this.state.communitylist.map((com, i) => {
+                                    ) : this.state.communitylist.slice(0,5).map((com, i) => {
                                         return (
                                             <li className="mb-2 pb-2" key={i}>
                                                 <div className="author-bio margin-bottom-0px">
                                                     <div className="d-flex align-items-center">
-                                                        <img src={this.state.img} alt="author" />
-                                                        <div className="author-inner-bio">
+                                                       {i + 1}. <TiGroup />
+                                                        <div className="author-inner-bio margin-left-2px">
                                                             <p>
                                                                 <Link to={`/forum/r/${com.communityName}`}>{'r/' + com.communityName}</Link>
                                                             </p>
@@ -130,13 +135,15 @@ class CommunitySidebar extends Component {
                                                     </div>
                                                 </div>
                                             </li>
+
                                         )
                                     })
                                 }
 
                             </ul>
+                           
                         </div>
-                            </div>*/}
+                    </div>}
 
 
 
@@ -155,7 +162,7 @@ function mapStateToProps(state) {
     const { posts } = state.post;
 
     return {
-        communitydetails, category, communitylist,posts,
+        communitydetails, category, communitylist, posts,
         message
     };
 }

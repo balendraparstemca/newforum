@@ -1,45 +1,40 @@
 import React, {Component} from 'react'
-
-export default class BannerOneHeroHeading extends Component {
-    state  = {
-        title: 'What are you interested in ',
-        titleHighlight: [
-            {
-                active: true,
-                text: 'Hotels'
-            },
-            {
-                active: false,
-                text: 'Restaurants'
-            },
-            {
-                active: false,
-                text: 'Shops'
-            },
-            {
-                active: false,
-                text: 'Salons'
-            },
-            {
-                active: false,
-                text: 'Apartments'
-            },
-            {
-                active: false,
-                text: 'Travels'
-            },
-            {
-                active: false,
-                text: 'Business'
-            },
-            {
-                active: false,
-                text: 'Fitness'
-            }
-        ],
-        desc: 'Discover the best places to stay, eat, shop & visit the city nearest to you.'
+import { connect } from "react-redux";
+import { fetchCategory } from '../../../services/action/common';
+ class BannerOneHeroHeading extends Component {
+    constructor(props) {
+        super(props)
+        this.state  = {
+            title: 'What are you interested in ',
+            category:[],
+            titleHighlight: [
+                {
+                    active: true,
+                    text: 'Hotels'
+                }
+              
+            ],
+            desc: 'Discover the best places to stay, eat, shop & visit the city nearest to you.'
+        }
     }
+     
+    componentDidMount() {
+        this.props.dispatch(fetchCategory()).then(() => {
+            this.setState({
+                category: this.state.titleHighlight.concat(  this.props.category &&  this.props.category.length ? this.props.category.map(cat => {
+                    return { active: false, text: `${cat.name}` };
+                }) : [{
+                    active: true,
+                    text: 'category not fetched'
+                }])
+            })
+
+          
+        });
+    }
+   
     render() {
+       
         return (
             <>
                 <div className="hero-heading">
@@ -47,7 +42,7 @@ export default class BannerOneHeroHeading extends Component {
                         <h2 className="sec__title cd-headline zoom">
                             {this.state.title}
                             <span className="cd-words-wrapper">
-                                {this.state.titleHighlight.map((item, index) => {
+                                {this.state.category.map((item, index) => {
                                     return (
                                         <b className={item.active ? 'is-visible' : ' '} key={index}> {item.text}</b>
                                     )
@@ -63,3 +58,13 @@ export default class BannerOneHeroHeading extends Component {
         )
     }
 }
+
+function mapStateToProps(state) {
+    const { isLoggedIn,userdetails } = state.auth;
+    const {category } = state.common;
+    return {
+        isLoggedIn, category, userdetails
+    
+    };
+}
+export default connect(mapStateToProps)(BannerOneHeroHeading);

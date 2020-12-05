@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import GeneralHeader from "../../components/common/GeneralHeader";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Link } from "react-router-dom";
-import { BsListCheck, BsBookmark,BsFillAlarmFill, BsLink45Deg, BsPeopleCircle, BsPersonFill,BsFillExclamationCircleFill, BsFillBookmarkFill, BsThreeDotsVertical } from 'react-icons/bs'
-import { FaCommentDots, FaEdit,FaRegCalendar } from 'react-icons/fa'
+import { BsListCheck, BsBookmark, BsFillAlarmFill, BsLink45Deg, BsPeopleCircle, BsPersonFill, BsFillExclamationCircleFill, BsFillBookmarkFill, BsThreeDotsVertical } from 'react-icons/bs'
+import { FaCommentDots, FaEdit, FaRegCalendar } from 'react-icons/fa'
 import { FiRefreshCw } from 'react-icons/fi'
-import { AiOutlineUser, AiOutlinePlusCircle,  AiOutlineExclamationCircle, AiFillDelete } from 'react-icons/ai'
+import { AiOutlineUser, AiOutlinePlusCircle, AiOutlineExclamationCircle, AiFillDelete } from 'react-icons/ai'
 import Button from "../../components/common/Button";
 import $ from 'jquery'
 import NewsLetter from "../../components/other/cta/NewsLetter";
@@ -26,8 +26,8 @@ class UserDashboard extends Component {
             userdetail: null,
             message: '',
             loading: false,
-            userImg:  require('../../assets/images/testi-img2.jpg'),
-           img: require('../../assets/images/post.png')
+            userImg: require('../../assets/images/testi-img2.jpg'),
+            img: require('../../assets/images/post.png')
 
         }
     }
@@ -74,10 +74,10 @@ class UserDashboard extends Component {
         })
     }
 
-    UnsavePost=(saveid)=>{
-        this.props.dispatch(UnSaveposts(saveid)).then(()=>{
+    UnsavePost = (saveid) => {
+        this.props.dispatch(UnSaveposts(saveid)).then(() => {
             this.props.dispatch(FetchUserSavedpost(this.props.udetails && this.props.udetails[0].id))
-  
+
 
         })
 
@@ -104,8 +104,8 @@ class UserDashboard extends Component {
                                     <div className="dashboard-nav d-flex justify-content-between align-items-center mb-4">
                                         <div className="author-bio margin-bottom-20px">
                                             <div className="d-flex align-items-center">
-                                            <img src={this.state.userdetail && (this.state.userdetail.profileimg ? `http://localhost:7999/api/v1/utilities/${this.state.userdetail.profileimg}` : this.state.userImg)} alt="author" />
-                              
+                                                <img src={this.state.userdetail && (this.state.userdetail.profileimg ? `http://localhost:7999/api/v1/utilities/${this.state.userdetail.profileimg}` : this.state.userImg)} alt="author" />
+
                                                 <div className="author-inner-bio">
                                                     <h4 className="author__title font-weight-bold pb-0 mb-1">
                                                         <h5>{this.state.userdetail && ('u/' + this.state.userdetail.userName)}</h5>
@@ -156,18 +156,10 @@ class UserDashboard extends Component {
 
                                                         </div>
                                                         <div className="col-lg-4">
-                                                            <UserSidebar userid={this.state.userdetail && this.state.userdetail.id}/>
+                                                            <UserSidebar userid={this.state.userdetail && this.state.userdetail.id} />
                                                         </div>
                                                     </div>
-                                                    <div className="row">
-                                                        <div className="col-lg-12">
-                                                            <div className="button-shared text-center">
-                                                                <Button text="load more listing" url="#" className="border-0">
-                                                                    <span><FiRefreshCw /></span>
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                  
                                                 </div>
                                             </section>
                                         </TabPanel>
@@ -229,16 +221,19 @@ class UserDashboard extends Component {
 
                                                                                                     <div className="we-comment">
                                                                                                         <div className="coment-head">
-                                                                                                             <FaCommentDots/> commented
-                                                                                                            <span> <FaRegCalendar/> {moment(Number(post.comment_time)).fromNow()}</span><span>
-                                                                                                                <div className="col-1"><a data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i className="fa fa-ellipsis-h"></i>
-                                                                                                                </a>
+                                                                                                            <FaCommentDots /> commented
+                                                                                                            <span> <FaRegCalendar /> {moment(Number(post.comment_time)).fromNow()}</span><span>
+                                                                                                                <div className="col-1">
+                                                                                                                    <a data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i className="fa fa-ellipsis-h"></i>
+                                                                                                                    </a>
                                                                                                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                                                                         <a className="dropdown-item" href="?sort=top"><i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</a>
                                                                                                                         <a className="dropdown-item" onClick={() => this.DeleteComment(post.comment_id)}> <i className="fa fa-trash" aria-hidden="true"></i> Delete</a>
 
 
-                                                                                                                    </div></div>
+                                                                                                                    </div>
+                                                                                                                    
+                                                                                                                    </div>
                                                                                                             </span>
                                                                                                             <i className="fa fa-reply"></i>
                                                                                                         </div>
@@ -263,19 +258,11 @@ class UserDashboard extends Component {
 
                                                         </div>
                                                         <div className="col-lg-4">
-                                                        <UserSidebar userid={this.state.userdetail && this.state.userdetail.id}/>
-                                                      
+                                                            <UserSidebar userid={this.state.userdetail && this.state.userdetail.id} />
+
                                                         </div>
                                                     </div>
-                                                    <div className="row">
-                                                        <div className="col-lg-12">
-                                                            <div className="button-shared text-center">
-                                                                <Button text="load more listing" url="#" className="border-0">
-                                                                    <span><FiRefreshCw /></span>
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                   
                                                 </div>
                                             </section>
 
@@ -306,7 +293,7 @@ class UserDashboard extends Component {
                                                                                 </a>
 
                                                                                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                     <p className="dropdown-item " onClick={() => this.UnsavePost(post.id)}><BsFillBookmarkFill /> Remove</p>
+                                                                                    <p className="dropdown-item " onClick={() => this.UnsavePost(post.id)}><BsFillBookmarkFill /> Remove</p>
 
                                                                                 </div>
 
@@ -315,7 +302,7 @@ class UserDashboard extends Component {
 
                                                                                 <div className="col-3">
                                                                                     <div className="row">
-                                                          
+
                                                                                         <div className="col">
                                                                                             <div className="span2">
                                                                                                 <img src={this.state.img} alt="" className="img-thumbnail" />
@@ -352,19 +339,11 @@ class UserDashboard extends Component {
 
                                                         </div>
                                                         <div className="col-lg-4">
-                                                        <UserSidebar userid={this.state.userdetail && this.state.userdetail.id}/>
-                                                      
+                                                            <UserSidebar userid={this.state.userdetail && this.state.userdetail.id} />
+
                                                         </div>
                                                     </div>
-                                                    <div className="row">
-                                                        <div className="col-lg-12">
-                                                            <div className="button-shared text-center">
-                                                                <Button text="load more listing" url="#" className="border-0">
-                                                                    <span><FiRefreshCw /></span>
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                   
                                                 </div>
                                             </section>
                                         </TabPanel>

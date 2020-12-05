@@ -1,212 +1,46 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
-import {IoMdStar, IoMdStarHalf, IoIosCheckmarkCircle, IoMdMusicalNotes, IoIosLink} from 'react-icons/io'
+import { IoIosCheckmarkCircle, IoIosLink } from 'react-icons/io'
 import { AiOutlineEye } from 'react-icons/ai'
-import { RiHotelBedLine } from 'react-icons/ri'
-import { GiChickenOven } from 'react-icons/gi'
 import { FiPhone, FiHeart } from 'react-icons/fi'
 import { FaRegCalendarCheck } from 'react-icons/fa'
-
+import { getpeopleviewList } from '../../services/action/list';
+import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
+import moment from 'moment';
+import ReactStars from "react-rating-stars-component";
 class PlaceOne extends Component {
-    states = {
-        items: [
-            {
-                bedge: 'New Open',
-                title: 'Hotel Govendor',
-                titleIcon: <IoIosCheckmarkCircle />,
-                titleUrl: '/listing-details',
-                stitle: 'Bishop Avenue, New York',
-                image: require('../../assets/images/img30.jpg'),
-                cardType: 'Hotel',
-                cardTypeIcon: <RiHotelBedLine />,
-                author: require('../../assets/images/small-team6.jpg'),
-                authorUrl: '#',
-                number: '(492) 492-4828',
-                website: 'www.mysitelink.com',
-                websiteUrl: 'https://example.com',
-                date: 'Posted 1 month ago',
-                view: '204',
-                ratings: [
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStarHalf />,
-                    <IoMdStar className="last-star" />,
-                ],
-                ratingNum: '4.7'
-            },
-            {
-                bedge: 'New Open',
-                title: 'Favorite Place Food Bank',
-                titleIcon: <IoIosCheckmarkCircle />,
-                titleUrl: '/listing-details',
-                stitle: 'Bishop Avenue, New York',
-                image: require('../../assets/images/img28.jpg'),
-                cardType: 'Restaurant',
-                cardTypeIcon: <GiChickenOven />,
-                author: require('../../assets/images/small-team1.jpg'),
-                authorUrl: '#',
-                number: '(492) 492-4828',
-                website: 'www.mysitelink.com',
-                date: 'Posted 1 month ago',
-                view: '204',
-                ratings: [
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStarHalf />,
-                    <IoMdStar className="last-star" />,
-                ],
-                ratingNum: '4.5'
-            },
-            {
-                bedge: 'Closed',
-                title: 'beach blue boardwalk',
-                titleIcon: '',
-                titleUrl: '/listing-details',
-                stitle: 'Bishop Avenue, New York',
-                image: require('../../assets/images/img29.jpg'),
-                cardType: 'Travel',
-                cardTypeIcon: <GiChickenOven />,
-                author: require('../../assets/images/small-team2.jpg'),
-                authorUrl: '#',
-                number: '(492) 492-4828',
-                website: 'www.mysitelink.com',
-                date: 'Posted 1 month ago',
-                view: '248',
-                ratings: [
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStarHalf />,
-                    <IoMdStar className="last-star" />,
-                ],
-                ratingNum: '4.6'
-            },
-            {
-                bedge: 'New Open',
-                title: 'Hotel Govendor',
-                titleIcon: <IoIosCheckmarkCircle />,
-                titleUrl: '/listing-details',
-                stitle: 'Bishop Avenue, New York',
-                image: require('../../assets/images/img30.jpg'),
-                cardType: 'Hotel',
-                cardTypeIcon: <RiHotelBedLine />,
-                author: require('../../assets/images/small-team3.jpg'),
-                authorUrl: '#',
-                number: '(492) 492-4828',
-                website: 'www.mysitelink.com',
-                date: 'Posted 1 month ago',
-                view: '248',
-                ratings: [
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStarHalf />,
-                    <IoMdStar className="last-star" />,
-                ],
-                ratingNum: '4.6'
-            },
-            {
-                bedge: 'New Open',
-                title: 'sticky band party',
-                titleIcon: <IoIosCheckmarkCircle />,
-                titleUrl: '/listing-details',
-                stitle: 'Bishop Avenue, New York',
-                image: require('../../assets/images/img30.jpg'),
-                cardType: 'Event',
-                cardTypeIcon: <IoMdMusicalNotes />,
-                author: require('../../assets/images/small-team4.jpg'),
-                authorUrl: '#',
-                number: '(492) 492-4828',
-                website: 'www.mysitelink.com',
-                date: 'Posted 1 month ago',
-                view: '248',
-                ratings: [
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStarHalf />,
-                    <IoMdStar className="last-star" />,
-                ],
-                ratingNum: '4.4'
-            },
-            {
-                bedge: 'Closed',
-                title: 'Sena Clothing Shopping Mall',
-                titleIcon: '',
-                titleUrl: '/listing-details',
-                stitle: 'Bishop Avenue, New York',
-                image: require('../../assets/images/img32.jpg'),
-                cardType: 'Shop',
-                cardTypeIcon: <GiChickenOven />,
-                author: require('../../assets/images/small-team5.jpg'),
-                authorUrl: '#',
-                number: '(492) 492-4828',
-                website: 'www.mysitelink.com',
-                date: 'Posted 1 month ago',
-                view: '248',
-                ratings: [
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStarHalf />,
-                    <IoMdStar className="last-star" />,
-                ],
-                ratingNum: '4.6'
-            },
-            {
-                bedge: 'New Open',
-                title: 'Hotel Govendor',
-                titleIcon: <IoIosCheckmarkCircle />,
-                titleUrl: '/listing-details',
-                stitle: 'Bishop Avenue, New York',
-                image: require('../../assets/images/img30.jpg'),
-                cardType: 'Hotel',
-                cardTypeIcon: <RiHotelBedLine />,
-                author: require('../../assets/images/small-team6.jpg'),
-                authorUrl: '#',
-                number: '(492) 492-4828',
-                website: 'www.mysitelink.com',
-                date: 'Posted 1 month ago',
-                view: '204',
-                ratings: [
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStarHalf />,
-                    <IoMdStar className="last-star" />,
-                ],
-                ratingNum: '4.7'
-            },
-            {
-                bedge: 'New Open',
-                title: 'Favorite Place Food Bank',
-                titleIcon: <IoIosCheckmarkCircle />,
-                titleUrl: '/listing-details',
-                stitle: 'Bishop Avenue, New York',
-                image: require('../../assets/images/img28.jpg'),
-                cardType: 'Restaurant',
-                cardTypeIcon: <GiChickenOven />,
-                author: require('../../assets/images/small-team1.jpg'),
-                authorUrl: '#',
-                number: '(492) 492-4828',
-                website: 'www.mysitelink.com',
-                date: 'Posted 1 month ago',
-                view: '204',
-                ratings: [
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStar />,
-                    <IoMdStarHalf />,
-                    <IoMdStar className="last-star" />,
-                ],
-                ratingNum: '4.5'
-            }
-        ]
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            viewlist: [],
+
+            author: require('../../assets/images/testi-img2.jpg'),
+            listimage: require('../../assets/images/bread-bg.jpg'),
+            cmid: null
+
+        }
     }
+
+    componentDidUpdate(prevProps) {
+        if (this.state.cmid !== this.props.categoryid) {
+            this.setState({ cmid: this.props.categoryid });
+            const obj = {
+                "city": this.props.city,
+                "country": this.props.country,
+                "state": this.props.state
+
+            }
+            console.log(obj)
+            this.props.dispatch(getpeopleviewList(obj));
+        }
+
+    }
+
+
     responsive = {
         // breakpoint from 0 up
         0: {
@@ -222,84 +56,97 @@ class PlaceOne extends Component {
         }
     }
     render() {
+        console.log(this.props.viewedlists)
+
         return (
             <div className="row">
+
                 <div className="col-lg-12">
 
                     <OwlCarousel
                         className="card-carousel mt-5"
-                        loop
-                        center={true}
+                        loop={false}
+                        center={false}
                         margin={10}
-                        autoplay={false}
-                        nav={false}
-                        dots={true}
+                        autoplay={true}
+                        nav={true}
+                        navText={[
+                            "<i class='icon icon-left'></i>",
+                            "<i class='icon icon-right'></i>"
+                        ]}
+                        rewind={true}
                         items={3}
-                        smartSpeed={1000}
+                        smartSpeed={10000}
                         animateOut={"slideOutDown"}
                         animateIn={"fadeIn"}
                         responsive={this.responsive}
                     >
-                        {this.states.items.map((item, index) => {
+                        {this.props.viewedlists && this.props.viewedlists.map((item, index) => {
                             return (
                                 <div className="card-item" key={index}>
-                                    <a href={item.titleUrl} className="card-image-wrap">
+                                    <Link to={`/listing-details/${item.listing.canonicalurl}`} className="card-image-wrap">
                                         <div className="card-image">
-                                            <img src={item.image} className="card__img" alt="Place" />
-                                            <span className={item.titleIcon ? 'badge': 'badge badge-closed' }>{item.bedge}</span>
-                                            <span className="badge-toggle" data-toggle="tooltip" data-placement="bottom" title="22 Likes">
+                                            <img src={item.listing.bannerimg ? `http://localhost:7999/api/v1/utilities/${item.listing.bannerimg}` : this.state.listimage} className="card__img" alt={item.listing.list_title} />
+                                            <span className='badge'>{this.state.bedge}</span>
+                                            <span className="badge-toggle" data-toggle="tooltip" data-placement="bottom" title={item.listing.likes}>
                                                 <FiHeart />
                                             </span>
                                         </div>
-                                    </a>
+                                    </Link>
                                     <div className="card-content-wrap">
                                         <div className="card-content">
-                                            <a href={item.titleUrl}>
+                                            <Link to={`/listing-list/${item.listing.categoryid}`}>
                                                 <h5 className="card-meta">
-                                                    <span>{item.cardTypeIcon}</span> {item.cardType}
+                                                    <span></span> {item.listing.categoryname}
                                                 </h5>
-                                                <h4 className="card-title">{item.title}
-                                                    <i>{item.titleIcon}</i>
+                                            </Link>
+                                            <Link to={`/listing-details/${item.listing.canonicalurl}`}>
+
+                                                <h4 className="card-title">{item.listing.list_title}
+                                                    <i><IoIosCheckmarkCircle /></i>
                                                 </h4>
                                                 <p className="card-sub">
-                                                    {item.stitle}
+                                                    {item.listing.address}
                                                 </p>
-                                            </a>
-                                            <a href={item.authorUrl} className="author-img">
-                                                <img src={item.author} alt="author-img" />
-                                            </a>
+                                            </Link>
+                                            <Link to={`/user-profile/${item.listing.username}`} className="author-img" >
+                                                <img src={item.listing.profileimg ? `http://localhost:7999/api/v1/utilities/${item.listing.profileimg}` : this.state.author} alt="author-img" />
+                                            </Link>
                                             <ul className="info-list padding-top-20px">
-                                                <li><span className="la d-inline-block"><FiPhone /></span> {item.number}</li>
-                                                <li><span className="la d-inline-block"><IoIosLink /></span>  <a href={item.websiteUrl}>
-                                                        {item.website}
-                                                    </a>
+                                                <li><span className="la d-inline-block"><FiPhone /></span> {item.listing.phone}</li>
+                                                <li><span className="la d-inline-block"><IoIosLink /></span>  <a target="_blanc" href={item.listing.website}>
+                                                    {item.listing.website.replace(/^https:\/\//, '')}
+                                                </a>
                                                 </li>
                                                 <li>
-                                                    <span className="la d-inline-block"><FaRegCalendarCheck /></span> {item.date}
+                                                    <span className="la d-inline-block"><FaRegCalendarCheck /></span>posted {moment(Number(item.listing.creating_time)).fromNow()}
                                                 </li>
                                             </ul>
                                         </div>
                                         <div className="rating-row">
                                             <div className="rating-rating">
-                                                {item.ratings.map((rating, index) => {
-                                                    return (
-                                                        <span key={index}>{rating}</span>
-                                                    )
-                                                })}
-                                                <span className="rating-count">{item.ratingNum}</span>
+                                                <span> <ReactStars
+                                                    count={5}
+                                                    size={24}
+                                                    value={item.rating[0].rating ? parseFloat(item.rating[0].rating).toFixed(1) : 0}
+                                                    isHalf={true} /> </span><span> - </span>
+                                                <span className="rating-count"> {parseFloat(item.rating[0].rating).toFixed(1)}</span>
+
                                             </div>
                                             <div className="listing-info">
                                                 <ul>
-                                                    <li><span className="info__count"><AiOutlineEye /></span> {item.view}</li>
-                                                    <li>
-                                                        <span className="info__save" data-toggle="tooltip" data-placement="top" title="Bookmark">
-                                                            <FiHeart />
-                                                        </span>
+                                                    <li><span className="info__count"><AiOutlineEye /></span> {item.listing.view}</li>
+
+                                                    <li onClick={() => this.like(item.listing.listing_id)}>
+                                                        <span className="info__count">   <FiHeart /></span> {item.listing.likes}
                                                     </li>
+
                                                 </ul>
                                             </div>
+
                                         </div>
                                     </div>
+
                                 </div>
                             )
                         })}
@@ -313,4 +160,13 @@ class PlaceOne extends Component {
     }
 }
 
-export default PlaceOne;
+
+function mapStateToProps(state) {
+    const { isLoggedIn, userdetails } = state.auth;
+    const { listdetail, viewedlists } = state.list;
+    return {
+        isLoggedIn, userdetails, listdetail, viewedlists
+
+    };
+}
+export default connect(mapStateToProps)(PlaceOne);
