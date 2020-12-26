@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:7999/api/v1/";
+const API_URL = process.env.REACT_APP_API_KEY
 
 class CommunityService {
 
@@ -57,6 +57,20 @@ class CommunityService {
   }
 
   getComunnityList(obj) {
+    return axios.post(API_URL + 'community', obj).then((response) => {
+      console.log(response.data);
+      return response.data;
+    });
+  }
+
+  getUserjoinedCommunityList(obj) {
+    return axios.post(API_URL + 'user_joined-community', obj).then((response) => {
+      console.log(response.data);
+      return response.data;
+    });
+  }
+
+  getUserCreatedCommunityList(obj) {
     return axios.post(API_URL + 'community', obj).then((response) => {
       console.log(response.data);
       return response.data;

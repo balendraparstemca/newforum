@@ -4,12 +4,12 @@ import NewsLetter from "../../components/other/cta/NewsLetter";
 import Footer from "../../components/common/footer/Footer";
 import ScrollTopBtn from "../../components/common/ScrollTopBtn";
 import GenericHeader from "../../components/common/GenericHeader";
-import { fetchCommunityPost, fetchHomePost } from '../../services/action/post';
+import { fetchHomePost } from '../../services/action/post';
+import PopularPosts from '../../components/places/popularposts';
+import { Helmet } from 'react-helmet';
 import { connect } from "react-redux";
 import HomeSidebar from '../../components/sidebars/widgets/homeleftbar';
-import { Helmet } from 'react-helmet';
-
-class BlogFullWidth extends Component {
+class PopularForum extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -26,24 +26,28 @@ class BlogFullWidth extends Component {
         this.fetchpost()
     }
 
-    fetchpost=async () => {
-    
-       return await this.props.dispatch(fetchHomePost())
+    fetchpost = async () => {
+
+        this.props.dispatch(fetchHomePost())
     }
 
 
     render() {
         return (
-            <main className="List-map-view2">
-                {/* Header */}
+            <main className="List-map-view">
                 <Helmet>
-                    <title>forum</title>
-                    <meta name="description" content="forum for casual desi Home" />
-                    <meta name="keywords" content="welcome to casual desi forum you can create community and discuss usefull topic get information" />
+                    <title>Popular</title>
+                    <meta name="description" content="forum for casual desi Popular" />
+                    <meta name="keywords" content="welcome to casual desi forum you can create community and discuss usefull topic get information popular,forums casucal desi" />
                 </Helmet>
+                {/* Header */}
                 <GeneralHeader />
+                <section className="blog-grid padding-bottom-100px">
+                    <div className="margin-top-150px margin-bottom-10px" >
 
-                <section className="blog-grid margin-top-190px  padding-bottom-100px">
+                        <PopularPosts></PopularPosts>
+                    </div>
+
                     <div className="container">
                         <div className="row">
                             <div className="col-lg-8">
@@ -56,7 +60,7 @@ class BlogFullWidth extends Component {
                                 <HomeSidebar />
                             </div>
                         </div>
-                      
+
                     </div>
                 </section>
 
@@ -85,4 +89,4 @@ function mapStateToProps(state) {
         message
     };
 }
-export default connect(mapStateToProps)(BlogFullWidth);
+export default connect(mapStateToProps)(PopularForum);

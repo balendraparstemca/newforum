@@ -2,22 +2,22 @@ import React, { Component } from 'react';
 import GeneralHeader from "../../components/common/GeneralHeader";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Link } from "react-router-dom";
-import { BsListCheck, BsBookmark, BsFillAlarmFill, BsLink45Deg, BsPeopleCircle, BsPersonFill, BsFillExclamationCircleFill, BsFillBookmarkFill, BsThreeDotsVertical } from 'react-icons/bs'
-import { FaCommentDots, FaEdit, FaRegCalendar } from 'react-icons/fa'
-import { FiRefreshCw } from 'react-icons/fi'
-import { AiOutlineUser, AiOutlinePlusCircle, AiOutlineExclamationCircle, AiFillDelete } from 'react-icons/ai'
-import Button from "../../components/common/Button";
+import { BsListCheck, BsBookmark, BsFillAlarmFill, BsLink45Deg, BsPeopleCircle, BsEye } from 'react-icons/bs'
+import { FaCommentDots, FaRegCalendar } from 'react-icons/fa'
+import { AiOutlinePlusCircle, AiOutlineExclamationCircle, AiFillDelete } from 'react-icons/ai'
 import $ from 'jquery'
 import NewsLetter from "../../components/other/cta/NewsLetter";
 import Footer from "../../components/common/footer/Footer";
 import ScrollTopBtn from "../../components/common/ScrollTopBtn";
 import GenericHeader from '../../components/common/GenericHeader';
 import UserSidebar from '../../components/sidebars/usersidebar';
-import { Deletecomments, FetchUserpostComment, FetchUserSavedpost, UnSaveposts, userdetails } from '../../services/action/user';
+import { Deletecomments, FetchUserpostComment, FetchUserSavedpost, UnSaveposts, userdetails, } from '../../services/action/user';
 import { fetchUserPost } from '../../services/action/post';
 import { connect } from "react-redux";
-
 import moment from 'moment';
+import { Dropdown } from 'react-bootstrap';
+import { fetchJoinedCommunityList, fetchUserCommunityList } from '../../services/action/common';
+
 
 class UserDashboard extends Component {
     constructor(props) {
@@ -26,13 +26,19 @@ class UserDashboard extends Component {
             userdetail: null,
             message: '',
             loading: false,
+            comimg: require('../../assets/images/default.png'),
             userImg: require('../../assets/images/testi-img2.jpg'),
-            img: require('../../assets/images/post.png')
+            img: require('../../assets/images/post.png'),
+            prevurl: ''
 
         }
     }
     componentDidMount() {
         this.fetchuserdetail();
+        this.setState({
+            prevurl: this.props.match.params.username
+        })
+
 
         $(document).on('click', '.delete-account-info .delete-account, .card-item .card-content-wrap .delete-btn', function (e) {
             $('body').addclassName('modal-open').css({ paddingRight: '17px' });
@@ -52,6 +58,15 @@ class UserDashboard extends Component {
 
     }
 
+    componentDidUpdate() {
+
+        if (this.state.prevurl !== this.props.match.params.username) {
+            this.setState({ prevurl: this.props.match.params.username })
+            this.fetchuserdetail();
+
+        }
+    }
+
 
 
     fetchuserdetail = async () => {
@@ -63,15 +78,27 @@ class UserDashboard extends Component {
                     userdetail: this.props.udetails[0]
                 })
 
-                this.props.dispatch(fetchUserPost(this.props.udetails[0].id))
+                this.fetchuserpost();
                 this.props.dispatch(FetchUserpostComment(this.props.udetails[0].id))
                 this.props.dispatch(FetchUserSavedpost(this.props.udetails[0].id))
+                this.props.dispatch(fetchUserCommunityList({ admin: this.props.udetails[0].id }))
+                this.props.dispatch(fetchJoinedCommunityList({ userid: this.props.udetails[0].id }))
+
             }
             else {
                 this.props.history.push("/error");
                 window.location.reload();
             }
         })
+    }
+
+    fetchuserpost = async () => {
+        let obj = { "userName": this.props.match.params.username }
+        return await this.props.dispatch(userdetails(obj)).then(() => {
+            this.props.dispatch(fetchUserPost(this.props.udetails && this.props.udetails[0].id))
+
+        })
+
     }
 
     UnsavePost = (saveid) => {
@@ -91,6 +118,7 @@ class UserDashboard extends Component {
         })
     }
     render() {
+        const user = this.props.userdetails && this.props.userdetails;
         return (
             <main className="List-map-view2">
                 {/* Header */}
@@ -101,45 +129,70 @@ class UserDashboard extends Component {
                         <Tabs>
                             <div className="row">
                                 <div className="col-lg-12">
-                                    <div className="dashboard-nav d-flex justify-content-between align-items-center mb-4">
+                                    <div className="dashboard-nav d-flex justify-content-between align-items-center">
                                         <div className="author-bio margin-bottom-20px">
-                                            <div className="d-flex align-items-center">
+                                            <div className="d-flex align-items-center mb-4">
                                                 <img src={this.state.userdetail && (this.state.userdetail.profileimg ? `http://localhost:7999/api/v1/utilities/${this.state.userdetail.profileimg}` : this.state.userImg)} alt="author" />
 
                                                 <div className="author-inner-bio">
-                                                    <h4 className="author__title font-weight-bold pb-0 mb-1">
+                                                    <div className="author__title font-weight-bold pb-0 mb-1">
                                                         <h5>{this.state.userdetail && ('u/' + this.state.userdetail.userName)}</h5>
-                                                    </h4>
+                                                    </div>
                                                     <p className="author__meta">
 
                                                     </p>
                                                 </div>
                                             </div>
+
+
+                                            <TabList className="nav nav-tabs border-0" id="nav-tab">
+
+
+                                                <Tab>
+                                                    <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
+                                                        <span className="la"><BsListCheck /></span> Posts
+                                                </Link>
+                                                </Tab>
+
+                                                <Tab>
+                                                    {this.props.isLoggedIn ? (
+                                                        this.state.userdetail && this.state.userdetail.id === user.id ?
+                                                            <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
+                                                                <span className="la"><BsBookmark /></span>Comment
+                                                </Link> : '') : ''
+                                                    }
+                                                </Tab>
+                                                <Tab>
+                                                    {this.props.isLoggedIn ? (
+                                                        this.state.userdetail && this.state.userdetail.id === user.id ?
+                                                            <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
+                                                                <span className="la"><BsBookmark /></span>Saved post
+                                                        </Link> : '') : ''
+                                                    }
+                                                </Tab>
+                                                <Tab>
+
+                                                    {this.props.isLoggedIn ? (
+                                                        this.state.userdetail && this.state.userdetail.id === user.id ?
+
+                                                            <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
+                                                                <span className="la"><BsBookmark /></span>your community
+                                                </Link> : '') : ''
+                                                    }
+                                                </Tab>
+
+                                                <div className="btn-box">
+                                                    <Link to="/forum/submit" className="theme-btn"><span className="la"><AiOutlinePlusCircle /></span> create posts</Link>
+                                                </div>
+                                                {this.props.isLoggedIn ? (
+                                                    this.state.userdetail && this.state.userdetail.id === user.id ?
+                                                        <div className="btn-box">
+                                                            <Link to="/forum/newcommunity" className="theme-btn"><span className="la"><AiOutlinePlusCircle /></span> create community</Link>
+                                                        </div> : '') : ''
+                                                }
+                                            </TabList>
                                         </div>
-                                        <TabList className="nav nav-tabs border-0" id="nav-tab">
 
-
-                                            <Tab>
-                                                <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
-                                                    <span className="la"><BsListCheck /></span> Posts
-                                                </Link>
-                                            </Tab>
-
-                                            <Tab>
-                                                <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
-                                                    <span className="la"><BsBookmark /></span>Comment
-                                                </Link>
-                                            </Tab>
-                                            <Tab>
-                                                <Link className="nav-item nav-link theme-btn pt-0 pb-0 mr-1" to="#">
-                                                    <span className="la"><BsBookmark /></span>Saved post
-                                                </Link>
-                                            </Tab>
-
-                                            <div className="btn-box">
-                                                <Link to="/forum/submit" className="theme-btn"><span className="la"><AiOutlinePlusCircle /></span> create posts</Link>
-                                            </div>
-                                        </TabList>
 
                                     </div>
                                 </div>
@@ -151,7 +204,7 @@ class UserDashboard extends Component {
                                                     <div className="row">
                                                         <div className="col-lg-8">
                                                             <div className="margin-top-0px">
-                                                                <GenericHeader updatepostaftervote={this.fetchuserdetail} />
+                                                                <GenericHeader updatepostaftervote={this.fetchuserpost} urlid={this.props.match.params.username} />
                                                             </div>
 
                                                         </div>
@@ -159,7 +212,7 @@ class UserDashboard extends Component {
                                                             <UserSidebar userid={this.state.userdetail && this.state.userdetail.id} />
                                                         </div>
                                                     </div>
-                                                  
+
                                                 </div>
                                             </section>
                                         </TabPanel>
@@ -170,21 +223,19 @@ class UserDashboard extends Component {
                                                     <div className="row">
                                                         <div className="col-lg-8">
                                                             <div className="margin-top-0px">
-                                                                {this.props.userpostcomment.length > 0 && this.props.userpostcomment.map((post) => (
+                                                                {this.props.userpostcomment.length > 0 && this.props.userpostcomment.map((post, i) => (
 
-                                                                    <div className="central-meta item margin-top-10px ">
+                                                                    <div className="central-meta item margin-top-10px " key={i}>
+                                                                        <Dropdown className="float-right">
+                                                                            <Dropdown.Toggle variant="default" id="dropdown-basic">
 
-                                                                        <div className="dropdown">
-                                                                            <a className="float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><BsThreeDotsVertical />
-                                                                            </a>
+                                                                            </Dropdown.Toggle>
 
-                                                                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <p className="dropdown-item"><Link to={`/post/edit/${post.canonicalurl}`} ><FaEdit /> Edit </Link></p>
-                                                                                <p className="dropdown-item" onClick={() => this.DeleteComment(post.comment_id)}> <AiFillDelete /> Delete</p>
+                                                                            <Dropdown.Menu>
+                                                                                <Dropdown.Item onClick={() => this.DeleteComment(post.comment_id)}> <AiFillDelete /> Delete</Dropdown.Item>
 
-                                                                            </div>
-
-                                                                        </div>
+                                                                            </Dropdown.Menu>
+                                                                        </Dropdown>
                                                                         <div className="user-post">
                                                                             <div className="friend-info">
                                                                                 <div className="row">
@@ -232,8 +283,8 @@ class UserDashboard extends Component {
 
 
                                                                                                                     </div>
-                                                                                                                    
-                                                                                                                    </div>
+
+                                                                                                                </div>
                                                                                                             </span>
                                                                                                             <i className="fa fa-reply"></i>
                                                                                                         </div>
@@ -262,7 +313,7 @@ class UserDashboard extends Component {
 
                                                         </div>
                                                     </div>
-                                                   
+
                                                 </div>
                                             </section>
 
@@ -288,16 +339,17 @@ class UserDashboard extends Component {
                                                                     ) :
                                                                     this.props.savedposts.map((post, i) => (
                                                                         <div className="central-meta item cardb margin-bottom-10px" key={i}>
-                                                                            <div className="dropdown">
-                                                                                <a className="float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><BsThreeDotsVertical />
-                                                                                </a>
 
-                                                                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                    <p className="dropdown-item " onClick={() => this.UnsavePost(post.id)}><BsFillBookmarkFill /> Remove</p>
+                                                                            <Dropdown className="float-right">
+                                                                                <Dropdown.Toggle variant="default" id="dropdown-basic">
 
-                                                                                </div>
+                                                                                </Dropdown.Toggle>
 
-                                                                            </div>
+                                                                                <Dropdown.Menu>
+                                                                                    <Dropdown.Item onClick={() => this.UnsavePost(post.id)}> <AiFillDelete /> Remove</Dropdown.Item>
+
+                                                                                </Dropdown.Menu>
+                                                                            </Dropdown>
                                                                             <div className="row">
 
                                                                                 <div className="col-3">
@@ -343,7 +395,112 @@ class UserDashboard extends Component {
 
                                                         </div>
                                                     </div>
-                                                   
+
+                                                </div>
+                                            </section>
+                                        </TabPanel>
+
+                                        <TabPanel>
+                                            <section className="blog-grid margin-top-10px  padding-bottom-10px">
+                                                <div className="container">
+                                                    <div className="row">
+                                                        <div className="col-lg-4">
+                                                            <div className="margin-top-0px">
+                                                                <div className="sidebar-widget similar-widget">
+
+                                                                    <h3 className="widget-title">your community</h3>
+
+                                                                    <div className="title-shape"></div>
+                                                                    <div className="similar-list padding-top-30px">
+
+                                                                        {this.props.usercommunitylist && this.props.usercommunitylist.length === 0 ?
+                                                                            (
+                                                                                <div className="btn-box text-center padding-top-30px">
+
+                                                                                    <span> there is no community created by you<BsEye /></span>
+
+                                                                                </div>
+                                                                            ) : this.props.usercommunitylist.map((com, i) => {
+                                                                                return (
+                                                                                    <div key={i} className="recent-item mb-3">
+                                                                                        <div className="recent-img">
+                                                                                            <Link to={`/r/${com.communityName}`}>
+                                                                                                <img src={this.state.comimg} alt="blog" />
+                                                                                            </Link>
+                                                                                        </div>
+                                                                                        <div className="recentpost-body">
+                                                                                            <h4 className="recent__link">
+                                                                                                <Link to={`/forum/r/${com.communityName}`}>{'r/' + com.communityName}</Link>
+                                                                                            </h4>
+                                                                                            <p className="recent__meta">created : {moment(Number(com.Date)).fromNow()}</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                )
+                                                                            })}
+
+                                                                        <div className="row">
+                                                                            <div className="col-lg-12">
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div className="col-lg-4">
+                                                            <div className="margin-top-0px">
+                                                                <div className="sidebar-widget similar-widget">
+
+                                                                    <h3 className="widget-title"> community that you follow</h3>
+
+                                                                    <div className="title-shape"></div>
+                                                                    <div className="similar-list padding-top-30px">
+
+                                                                        {this.props.joinedcommunitylist && this.props.joinedcommunitylist.length === 0 ?
+                                                                            (
+                                                                                <div className="btn-box text-center padding-top-30px">
+
+                                                                                    <span> there is no community you following<BsEye /></span>
+
+                                                                                </div>
+                                                                            ) : this.props.joinedcommunitylist.map((com, i) => {
+                                                                                return (
+                                                                                    <div key={i} className="recent-item mb-3">
+                                                                                        <div className="recent-img">
+                                                                                            <Link to={`/r/${com.communityName}`}>
+                                                                                                <img src={this.state.comimg} alt="blog" />
+                                                                                            </Link>
+                                                                                        </div>
+                                                                                        <div className="recentpost-body">
+                                                                                            <h4 className="recent__link">
+                                                                                                <Link to={`/forum/r/${com.com_name}`}>{'r/' + com.com_name}</Link>
+                                                                                            </h4>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                )
+                                                                            })}
+
+                                                                        <div className="row">
+                                                                            <div className="col-lg-12">
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div className="col-lg-4">
+                                                            <UserSidebar userid={this.state.userdetail && this.state.userdetail.id} />
+
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                             </section>
                                         </TabPanel>
@@ -401,9 +558,10 @@ class UserDashboard extends Component {
 
 function mapStateToProps(state) {
     const { udetails, userpostcomment, savedposts } = state.user;
-    const { userdetails } = state.auth;
+    const { joinedcommunitylist, usercommunitylist, communitylist } = state.community;
+    const { userdetails, isLoggedIn } = state.auth;
     return {
-        udetails, userdetails, userpostcomment, savedposts
+        udetails, userdetails, userpostcomment, savedposts, joinedcommunitylist, usercommunitylist, communitylist, isLoggedIn
 
     };
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:7999/api/v1/";
+const API_URL = process.env.REACT_APP_API_KEY
 
 class AuthService {
   login(email_id, password) {
@@ -11,8 +11,12 @@ class AuthService {
       });
   }
 
-  logout() {
-    localStorage.removeItem("user");
+  
+  logoutUser(obj) {
+    return axios.post(API_URL + "users/logout", obj).then((response) => {
+      console.log(response.data);
+      return response.data;
+    });
   }
 
   register(first_name, last_name, user_name, email_id, password) {
@@ -30,9 +34,21 @@ class AuthService {
 
 
   addProfileImage(formData, userid) {
-    return axios.post("http://localhost:7999/api/v1/utilities/userprofile_upload/" + userid, formData)
+    return axios.post( API_URL + "utilities/userprofile_upload/" + userid, formData)
 
   }
+
+  updateProfile(obj) {
+    return axios.post(API_URL + "users/update_user",obj).then((response) => {
+        return response.data;
+    });
+}
+
+ userverification(obj) {
+  return axios.post(API_URL + "users/verify_email",obj).then((response) => {
+      return response.data;
+  });
+}
 
 }
 

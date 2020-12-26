@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import GeneralHeader from "../../common/GeneralHeader";
 import Breadcrumb from "../../common/Breadcrumb";
-import UserSidebar from "./UserSidebar";
 import { IoIosCheckmarkCircle, IoIosLink, IoMdStar, IoMdStarHalf } from "react-icons/io";
 import { FiCheck, FiHeart, FiPhone } from "react-icons/fi";
 import { FaRegCalendarCheck } from "react-icons/fa";
@@ -159,7 +158,7 @@ class UserProfile extends Component {
                                                             <Link to={`/listing-details/${item.listing.canonicalurl}`}>
 
                                                                 <h4 className="card-title">{item.listing.list_title}
-                                                                   { item.listing.approved===1 ? <i><IoIosCheckmarkCircle /></i>:  <i><AiFillQuestionCircle /><Link to={`/listing-details/${item.listing.canonicalurl}/edit`}>not verified</Link></i>}
+                                                                    {item.listing.approved === 1 ? <i><IoIosCheckmarkCircle /></i> : <i><AiFillQuestionCircle /><Link to={`/listing-details/${item.listing.canonicalurl}/edit`}>not verified</Link></i>}
                                                                 </h4>
                                                                 <p className="card-sub">
                                                                     {item.listing.address}
@@ -185,9 +184,9 @@ class UserProfile extends Component {
                                                             </div>
                                                             <div className="listing-info">
                                                                 <ul>
-                                        <li><span className="info__count"></span> {item.listing.likes}</li>
+                                                                    <li><span className="info__count"></span> {item.listing.likes}</li>
                                                                     <li>
-                                                                        <span  onClick={()=>this.like(item.listing.listing_id)} className="info__save"   title="Bookmark">
+                                                                        <span onClick={() => this.like(item.listing.listing_id)} className="info__save" title="Bookmark">
                                                                             <FiHeart />
                                                                         </span>
                                                                     </li>

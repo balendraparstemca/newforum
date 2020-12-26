@@ -8,12 +8,11 @@ import { FaRegEnvelope } from 'react-icons/fa'
 import { BsPencil } from 'react-icons/bs'
 import { RiSendPlane2Line } from 'react-icons/ri'
 import Select from "react-select";
-import PhotoUploader from '../../components/addlisting/PhotoUploader';
 import { postModel } from '../../model/postModel';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { connect } from "react-redux";
 import { fetchCommunityList, fetchFlair } from '../../services/action/common';
-import { createpost, fetcPostDetail, postUpdate } from '../../services/action/post';
+import { fetcPostDetail, postUpdate } from '../../services/action/post';
 
 class EditPost extends Component {
 
@@ -38,9 +37,9 @@ class EditPost extends Component {
             flare: { label: 'select tag', value: '' },
             comid: { label: 'select community', value: 0 },
             titleurl: '',
-            postdetail:{},
-            post_id:null
-           
+            postdetail: {},
+            post_id: null
+
         };
 
     }
@@ -49,26 +48,34 @@ class EditPost extends Component {
 
         this.props.dispatch(fetchCommunityList());
         this.props.dispatch(fetchFlair(3));
-           this.postdetail();
+
+        this.postdetail();
 
     }
 
     postdetail = () => {
+        const userid = this.props.userdetails && this.props.userdetails.id;
 
         let obj = { canonicalurl: this.props.match.params.url }
         this.props.dispatch(fetcPostDetail(obj)).then(() => {
             if (this.props.postsdetail.length > 0) {
-                this.setState({
-                    post_id:this.props.postsdetail[0].post_id,
-                    comid:{label:this.props.postsdetail[0].com_name,value:this.props.postsdetail[0].com_id},
-                    description: this.props.postsdetail[0].description,
-                    title: this.props.postsdetail[0].title,
-                    url: this.props.postsdetail[0].url,
-                    flare:{label:this.props.postsdetail[0].flare_tag,value:this.props.postsdetail[0].flare_tag},
-                    postdetail: this.props.postsdetail[0]
-                   
-                })
-             
+                if (this.props.postsdetail[0].user === userid) {
+                    this.setState({
+                        post_id: this.props.postsdetail[0].post_id,
+                        comid: { label: this.props.postsdetail[0].com_name, value: this.props.postsdetail[0].com_id },
+                        description: this.props.postsdetail[0].description,
+                        title: this.props.postsdetail[0].title,
+                        url: this.props.postsdetail[0].url,
+                        flare: { label: this.props.postsdetail[0].flare_tag, value: this.props.postsdetail[0].flare_tag },
+                        postdetail: this.props.postsdetail[0]
+
+                    })
+                } else {
+                    this.props.history.push("/forum/home");
+                    window.location.reload();
+
+                }
+
             }
             else {
                 this.props.history.push("/error");
@@ -140,7 +147,7 @@ class EditPost extends Component {
             this.setState({
                 loading: true
             });
-            postModel.post_id=this.state.post_id;
+            postModel.post_id = this.state.post_id;
             postModel.title = this.state.title;
             postModel.description = this.state.description;
             postModel.type = this.state.accessmodifier;
@@ -152,21 +159,21 @@ class EditPost extends Component {
             postModel.canonicalurl = this.state.title.split(' ', 6).join(' ').toLowerCase().replace(/ /g, '_').replace(/[^\w-]+/g, '');
             console.log(postModel);
             this.props.dispatch(postUpdate(postModel)).then(() => {
- 
-             
-                     this.setState({
-                         alert: this.getAlert('success', ' successfull updated')
-                     })
-              
-                
- 
-             }).catch(() => {
-                 this.setState({
-                     loading: false, alert: this.getAlert('warning', ' creating post Failed')
-                 });
- 
-             });
-             
+
+
+                this.setState({
+                    alert: this.getAlert('success', ' successfull updated')
+                })
+
+
+
+            }).catch(() => {
+                this.setState({
+                    loading: false, alert: this.getAlert('warning', ' creating post Failed')
+                });
+
+            });
+
         }
 
     }
@@ -192,7 +199,7 @@ class EditPost extends Component {
             return { value: `${item.title}`, label: `# ${item.title}` };
         }) : [];
 
-    
+
         return (
             <main className="List-map-view2">
                 {/* Header */}
@@ -249,7 +256,7 @@ class EditPost extends Component {
                                                                 options={flairlist}
                                                             />  </div>
                                                     </div>
-                                                   
+
 
 
                                                     <div className="btn-box">
@@ -268,7 +275,7 @@ class EditPost extends Component {
 
                             </div>
                             <div className="col-lg-4">
-                               
+
                             </div>
                         </div>
 
@@ -295,7 +302,7 @@ function mapStateToProps(state) {
     const { userdetails, isLoggedIn } = state.auth;
     const { isCreated, postsdetail } = state.post;
     return {
-        communitylist, flair, userdetails, isCreated, isLoggedIn,postsdetail
+        communitylist, flair, userdetails, isCreated, isLoggedIn, postsdetail
     };
 }
 export default connect(mapStateToProps)(EditPost);

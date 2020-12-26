@@ -102,6 +102,7 @@ class Amenities extends Component {
                             </div>
                         </div>
                     </div>
+                    
                 </div>
                 <div className="btn-box mt-4">
                     <button type="submit" className="theme-btn border-0" disabled={this.state.loading}>

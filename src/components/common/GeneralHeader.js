@@ -17,7 +17,7 @@ export default class GeneralHeader extends Component {
     }
 
     state = {
-        logo: require('../../assets/images/logo.png')
+        logo: require('../../assets/images/logo-2.png')
     }
     render() {
         return (

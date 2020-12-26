@@ -21,7 +21,8 @@ import { connect } from "react-redux";
 import { BsEye } from 'react-icons/bs';
 import { MdStar } from 'react-icons/md';
 import { AiOutlineEye } from 'react-icons/ai';
-
+import queryString from 'query-string';
+import { Badge } from 'react-bootstrap';
 const shortby = [
     {
         value: 1,
@@ -48,7 +49,7 @@ const shortby = [
 
 ]
 
-class ListHeader extends Component {
+class ListHeaderTwo extends Component {
     constructor(props) {
         super(props);
         this.loadMore = this.loadMore.bind(this);
@@ -89,13 +90,14 @@ class ListHeader extends Component {
     }
 
     componentDidMount() {
-        if (this.props.match.params.category) {
-            this.setState({ paramid: this.props.match.params.category });
-            this.fetchCategorylists(this.props.match.params.category)
-        } else {
-            this.fetchHomelists();
+        let myVariable = queryString.parse(this.props.location.search)
+        console.log(myVariable.country)
+        console.log(myVariable.q)
+        console.log(myVariable.q)
 
-        }
+        this.fetchHomelists();
+
+
 
 
         $(document).ready(function () {
@@ -237,7 +239,7 @@ class ListHeader extends Component {
                 e.target.value.toLowerCase()
             ) !== -1 || item.listing.state.toLowerCase().search(
                 e.target.value.toLowerCase()
-            ) !== -1 
+            ) !== -1
         });
 
         this.setState({
@@ -246,7 +248,7 @@ class ListHeader extends Component {
     }
 
     allfeatures() {
-       
+
         const array = this.state.amentieslist && this.state.amentieslist;
         const result = [];
         const map = new Map();
@@ -598,9 +600,6 @@ class ListHeader extends Component {
                                                     <span className="la"><BsGrid /></span>
                                                 </Link>
                                             </Tab>
-
-
-
                                         </TabList>
 
                                     </div>
@@ -613,93 +612,102 @@ class ListHeader extends Component {
 
 
                                                 <div className="col-lg-8">
-                                                    {this.state.alllists && this.state.alllists.length === 0 ?
-                                                        (
-                                                            <div className="btn-box text-center padding-top-30px">
-                                                                <Button url="#" text="there is no  list " className=" d-block">
-                                                                    <span><BsEye /></span>
-                                                                </Button>
-                                                            </div>
-                                                        ) : this.state.alllists.slice(0, this.state.visible).map((item, index) => {
-                                                            return (
-                                                                <div className="card-item card-listing d-flex" key={index}>
-                                                                    <Link to={`/listing-details/${item.listing.canonicalurl}`} className="card-image-wrap">
-                                                                        <div className="card-image">
-                                                                            <img src={item.listing.bannerimg ? `http://localhost:7999/api/v1/utilities/${item.listing.bannerimg}` : this.state.listimage} className="card__img" alt={item.listing.list_title} />
-                                                                            <span className='badge'>{this.state.bedge}</span>
-                                                                            <span className="badge-toggle" data-toggle="tooltip" data-placement="bottom" title="22 Likes">
-                                                                                <FiHeart />
-                                                                            </span>
-                                                                        </div>
-                                                                    </Link>
-                                                                    <div className="card-content-wrap">
-                                                                        <div className="card-content">
-                                                                            <Link to={`/listing-list/${item.listing.categoryid}`}>
-                                                                                <h5 className="card-meta">
-                                                                                    <span></span> {item.listing.categoryname}
-                                                                                </h5>
+                                                    <div className="row">
+                                                        {this.state.alllists && this.state.alllists.length === 0 ?
+                                                            (
+                                                                <div className="btn-box text-center padding-top-30px">
+                                                                    <Button url="#" text="there is no  list " className=" d-block">
+                                                                        <span><BsEye /></span>
+                                                                    </Button>
+                                                                </div>
+                                                            ) : this.state.alllists.slice(0, this.state.visible).map((item, index) => {
+                                                                return (
+                                                                    <div className="col-lg-6 col-md-6" key={index}>
+                                                                        <div className="card-item">
+                                                                            <Link to={`/listing-details/${item.listing.canonicalurl}`} className="card-image-wrap">
+                                                                                <div className="card-image">
+                                                                                    <img src={item.listing.bannerimg ? `http://localhost:7999/api/v1/utilities/${item.listing.bannerimg}` : item.listing.listimage} className="card__img" alt={item.listing.list_title} />
+                                                                                    <span className='badge'>{this.state.bedge}</span>
+                                                                                    <span className="badge-toggle" data-toggle="tooltip" data-placement="bottom" title="22 Likes">
+                                                                                        <FiHeart />
+                                                                                    </span>
+                                                                                </div>
                                                                             </Link>
-                                                                            <Link to={`/listing-details/${item.listing.canonicalurl}`}>
+                                                                            <div className="card-content-wrap">
+                                                                                <div className="card-content">
+                                                                                    <Link to={`/listing-list/${item.listing.categoryid}`}>
+                                                                                        <h5 className="card-meta">
+                                                                                            <span></span> {item.listing.categoryname}
+                                                                                        </h5>
+                                                                                    </Link>
 
-                                                                                <h4 className="card-title">{item.listing.list_title}
-                                                                                    <i><IoIosCheckmarkCircle /></i>
-                                                                                </h4>
-                                                                                <p className="card-sub">
-                                                                                    {item.listing.address}
-                                                                                </p>
-                                                                            </Link>
-                                                                            <Link to={`/user-profile/${item.listing.username}`} className="author-img" >
-                                                                                <img src={item.listing.profileimg ? `http://localhost:7999/api/v1/utilities/${item.listing.profileimg}` : this.state.author} alt="author-img" />
-                                                                            </Link>
-                                                                            <ul className="info-list padding-top-20px">
-                                                                                <li><span className="la d-inline-block"><FiPhone /></span> {item.listing.phone}</li>
-                                                                                <li><span className="la d-inline-block"><IoIosLink /></span>  <a target="_blanc" href={item.listing.website}>
-                                                                                    {item.listing.website.replace(/^https:\/\//, '')}
-                                                                                </a>
-                                                                                </li>
-                                                                                <li>
-                                                                                    <span className="la d-inline-block"><FaRegCalendarCheck /></span>posted {moment(Number(item.listing.creating_time)).fromNow()}
-                                                                                </li>
-                                                                            </ul>
-                                                                        </div>
-                                                                        <div className="rating-row">
-                                                                            <div className="rating-rating">
-                                                                                <span> <ReactStars
-                                                                                    count={5}
-                                                                                    size={24}
-                                                                                    value={item.rating[0].rating ? parseFloat(item.rating[0].rating).toFixed(1) : 0}
-                                                                                    isHalf={true} /> </span><span> - </span>
-                                                                                <span className="rating-count"> {parseFloat(item.rating[0].rating).toFixed(1)}</span>
+                                                                                    <Link to={`/listing-details/${item.listing.canonicalurl}`}>
+
+                                                                                        <h4 className="card-title">{item.listing.list_title}
+                                                                                            <i><IoIosCheckmarkCircle /></i>
+                                                                                        </h4>
+                                                                                        <p className="card-sub">
+                                                                                            {item.listing.address}
+                                                                                        </p>
+                                                                                    </Link>
+                                                                                    <Link to={`/user-profile/${item.listing.username}`} className="author-img" >
+                                                                                        <img src={item.listing.profileimg ? `http://localhost:7999/api/v1/utilities/${item.listing.profileimg}` : this.state.author} alt="author-img" />
+                                                                                    </Link>
+                                                                                    <ul className="info-list padding-top-20px">
+                                                                                        <li><span className="la d-inline-block"><FiPhone /></span> {item.listing.phone}</li>
+                                                                                        <li><span className="la d-inline-block"><IoIosLink /></span>  <a target="_blanc" href={item.listing.website}>
+                                                                                            {item.listing.website.replace(/^https:\/\//, '')}
+                                                                                        </a>
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <span className="la d-inline-block"><FaRegCalendarCheck /></span>posted {moment(Number(item.listing.creating_time)).fromNow()}
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </div>
+                                                                                <div className="rating-row">
+                                                                                    <div className="rating-rating">
+
+                                                                                        <span> <ReactStars
+                                                                                            count={5}
+                                                                                            size={24}
+                                                                                            value={item.rating[0].rating ? parseFloat(item.rating[0].rating).toFixed(1) : 0}
+                                                                                            isHalf={true} /> </span><span> - </span>
+                                                                                        <span className="rating-count"> {parseFloat(item.rating[0].rating).toFixed(1)}</span>
 
 
-                                                                            </div>
-                                                                            <div className="listing-info">
-                                                                                <ul>
-                                                                                    <li><span className="info__count"><AiOutlineEye /></span> {item.listing.view}</li>
+                                                                                    </div>
+                                                                                    <div className="listing-info">
+                                                                                        <ul>
+                                                                                            <li><span className="info__count"><AiOutlineEye /></span> {item.listing.view}</li>
 
-                                                                                    <li onClick={() => this.like(item.listing.listing_id)}>
-                                                                                        <span className="info__count">   <FiHeart /></span> {item.listing.likes}
-                                                                                    </li>
+                                                                                            <li onClick={() => this.like(item.listing.listing_id)}>
+                                                                                                <span className="info__count">   <FiHeart /></span> {item.listing.likes}
+                                                                                            </li>
 
-                                                                                </ul>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            )
-                                                        })}
+                                                                )
+                                                            })}
+                                                    </div>
                                                     <div className="row">
+                                                        
                                                         <div className="col-lg-12">
-                                                            <div className="button-shared text-center">
+                                                            <div className="button-shared  text-center ">
                                                                 {this.state.visible < this.state.alllists.length &&
-                                                                    <button text="load more" onClick={this.loadMore} className="border-0">
-                                                                        <span className="d-inline-block">
+                                                                    <Badge pill variant="danger" onClick={this.loadMore} className="border-0">
+                                                                        <h5> <span className="d-inline-block">
                                                                             <FiRefreshCw />
-                                                                        </span>
-                                                                    </button>
+                                                                        </span></h5>
+                                                                    </Badge>
                                                                 }
+
                                                             </div>
                                                         </div>
+                                                       
                                                     </div>
                                                 </div>
 
@@ -854,12 +862,12 @@ class ListHeader extends Component {
                                             <div className="row">
                                                 {this.state.alllists && this.state.alllists.length === 0 ?
                                                     (
-                                                        <div className="btn-box text-center padding-top-30px">
+                                                        <div className="btn-box text-left padding-top-30px">
                                                             <Button url="#" text="there is no  list " className=" d-block">
                                                                 <span><BsEye /></span>
                                                             </Button>
                                                         </div>
-                                                    ) : this.state.alllists.map((item, index) => {
+                                                    ) : this.state.alllists.slice(0, this.state.visible).map((item, index) => {
                                                         return (
                                                             <div className="col-lg-4 column-td-6" key={index}>
                                                                 <div className="card-item">
@@ -936,11 +944,14 @@ class ListHeader extends Component {
                                             <div className="row">
                                                 <div className="col-lg-12">
                                                     <div className="button-shared mt-4 text-center">
-                                                        <Button text="Load More" url="#">
-                                                            <span className="la">
-                                                                <FiRefreshCw />
-                                                            </span>
-                                                        </Button>
+                                                        {this.state.visible < this.state.alllists.length &&
+                                                            <Badge pill variant="danger" onClick={this.loadMore} className="border-0">
+                                                                <h5> <span className="d-inline-block">
+                                                                    Load More <FiRefreshCw />
+                                                                </span></h5>
+                                                            </Badge>
+                                                        }
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -973,4 +984,4 @@ function mapStateToProps(state) {
 
     };
 }
-export default connect(mapStateToProps)(ListHeader);
+export default connect(mapStateToProps)(ListHeaderTwo);

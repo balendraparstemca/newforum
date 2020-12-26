@@ -1,9 +1,9 @@
 import {
-    CREATE_COMMUNITY, FETCH_COMMUNITYLIST, COMMUNITY_RULE, FETCH_COMMUNITY_DETAIL, FETCH_COMMUNITY_MEMBER, UPDATE_COMMUNITY, JOIN_COMMUNITY, LEAVE_COMMUNITY, APPROVE_COMMUNITY
+    CREATE_COMMUNITY, FETCH_COMMUNITYLIST, COMMUNITY_RULE, FETCH_COMMUNITY_DETAIL, FETCH_COMMUNITY_MEMBER, UPDATE_COMMUNITY, JOIN_COMMUNITY, LEAVE_COMMUNITY, APPROVE_COMMUNITY, FETCH_USER_COMMUNITYLIST, FETCH_JOINED_COMMUNITYLIST
 
 } from "../actionType";
 
-const initialState = { isCreated: false, isUpdated:false, communitylist: [], communitydetails: [], communitymember: [], isApprove: false, isLeaved: false };
+const initialState = { isCreated: false, isUpdated: false, usercommunitylist:[], joinedcommunitylist:[], communitylist: [], communitydetails: [], communitymember: [], isApprove: false, isLeaved: false };
 
 export default function (state = initialState, action) {
     const { type, payload } = action;
@@ -38,8 +38,8 @@ export default function (state = initialState, action) {
                 ...state,
                 isApprove: true
             };
-            
-        case  COMMUNITY_RULE:
+
+        case COMMUNITY_RULE:
             return {
                 ...state,
             };
@@ -48,6 +48,20 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 communitylist: payload.communitylist,
+
+            };
+
+        case FETCH_USER_COMMUNITYLIST:
+            return {
+                ...state,
+                usercommunitylist: payload.communitylist,
+
+            };
+
+        case FETCH_JOINED_COMMUNITYLIST:
+            return {
+                ...state,
+                joinedcommunitylist: payload.communitylist,
 
             };
 

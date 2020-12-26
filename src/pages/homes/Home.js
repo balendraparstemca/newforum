@@ -3,23 +3,43 @@ import GeneralHeader from '../../components/common/GeneralHeader'
 import BannerOne from '../../components/banner/banner1/BannerOne'
 import SectionsHeading from "../../components/common/SectionsHeading";
 import PopularCategories from "../../components/other/categories/PopularCategories";
-import HowItWorkOne from "../../components/hiw/hiw1/HowItWorkOne";
-import PlaceOne from "../../components/places/PlaceOne";
-import FunFactsOne from "../../components/other/funfacts/funfacts1/FunFactsOne";
+import Toplisting from "../../components/places/toplist";
 import InfoBox2 from "../../components/other/infoboxes/InfoBox2";
 import Button from "../../components/common/Button";
-import Testimonial from "../../components/sliders/Testimonial";
 import SectionDivider from "../../components/common/SectionDivider";
 import LatestBlog from "../../components/blogs/LatestBlog";
-import CtaOne from "../../components/other/cta/CtaOne";
 import ClientLogo from "../../components/sliders/ClientLogo";
 import NewsLetter from "../../components/other/cta/NewsLetter";
 import Footer from "../../components/common/footer/Footer";
 import ScrollTopBtn from "../../components/common/ScrollTopBtn";
-import BrowseCategoriesTwo from '../../components/other/categories/BrowseCategoriesTwo';
+import { connect } from "react-redux";
+import { fetchCategory, getAddress } from '../../services/action/common';
 
+ class Home extends Component {
 
-export default class Home extends Component {
+  
+        componentDidMount() {
+            this.props.dispatch(fetchCategory())
+          this.fetchcurrentlocation()
+        
+        }
+
+        fetchcurrentlocation=async()=>{
+            navigator.geolocation.getCurrentPosition(
+                async  function(position) {
+                    console.log(position.coords.latitude,position.coords.longitude);
+                    let address = await getAddress(position.coords.latitude,position.coords.longitude)
+                        console.log(address);
+                        console.log(position);
+                    
+                    
+                },
+                function(error) {
+                  console.error("Error Code = " + error.code + " - " + error.message);
+                }
+              );
+        }
+    
     ctaimages = {
         images: [
             {
@@ -60,6 +80,7 @@ export default class Home extends Component {
         ]
     }
     render() {
+        
         return (
             <main className="home-1">
                 {/* Header */}
@@ -84,16 +105,7 @@ export default class Home extends Component {
                 {/* How It Work */}
                
 
-                {/* Most Visited Place */}
-                <section className="card-area text-center padding-bottom-10px">
-                    <div className="container">
-                        <div className="row section-title-width text-center">
-                            <SectionsHeading title="Most Visited Places" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
-                        </div>
-
-                        <PlaceOne />
-                    </div>
-                </section>
+               
 
               
 
@@ -109,26 +121,7 @@ export default class Home extends Component {
                 </section>
 
                 {/* CTA */}
-                <section className="cta-area section-bg column-sm-center padding-top-10px padding-bottom-10px">
-                    {this.ctaimages.images.map((img, index) => {
-                        return (
-                            <img src={img.img} key={index} alt="Cta Symble" className="symble-img"/>
-                        )
-                    })}
-                    <div className="container">
-                        <div className="row align-items-center">
-                            <div className="col-lg-9 text-left">
-                                <SectionsHeading title="Dirto is the best way to find & discover great local businesses" titleClass=" mb-3 font-size-28" descClass=" font-size-17" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero" />
-                            </div>
-
-                            <div className="col-lg-3">
-                                <div className="btn-box">
-                                    <Button text="Create Account" url="/sign-up" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+               
 
 
                 <SectionDivider />
@@ -138,7 +131,18 @@ export default class Home extends Component {
                     <div className="container">
                         <div className="row section-title-width section-title-ml-mr-0">
                             <div className="col-lg-8">
-                                <SectionsHeading title="Latest Tips & Articles" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
+                                <SectionsHeading title="Popular Places near you" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
+                            </div>
+                            <div className="col-lg-4">
+                                <div className="btn-box h-100 d-flex align-items-center justify-content-end">
+                                    <Button text="view all post" url="/blog-grid" className=" margin-top-100px" />
+                                </div>
+                            </div>
+                        </div>
+                        <Toplisting />
+                        <div className="row section-title-width section-title-ml-mr-0">
+                            <div className="col-lg-8">
+                                <SectionsHeading title="Popular Posts near you" desc="Morbi convallis bibendum urna ut viverra. Maecenas quis consequat libero, a feugiat eros. Nunc ut lacinia tortors." />
                             </div>
                             <div className="col-lg-4">
                                 <div className="btn-box h-100 d-flex align-items-center justify-content-end">
@@ -167,3 +171,13 @@ export default class Home extends Component {
         )
     }
 }
+
+function mapStateToProps(state) {
+    const { isLoggedIn,userdetails } = state.auth;
+    const {category } = state.common;
+    return {
+        isLoggedIn, category, userdetails
+    
+    };
+}
+export default connect(mapStateToProps)(Home);

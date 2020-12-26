@@ -18,22 +18,26 @@ import { fetchCategory } from '../../../services/action/common';
         }
     }
      
-    componentDidMount() {
-        this.props.dispatch(fetchCategory()).then(() => {
-            this.setState({
-                category: this.state.titleHighlight.concat(  this.props.category &&  this.props.category.length ? this.props.category.map(cat => {
-                    return { active: false, text: `${cat.name}` };
-                }) : [{
-                    active: true,
-                    text: 'category not fetched'
-                }])
-            })
-
-          
-        });
-    }
+   
+    
    
     render() {
+       
+        let category=[];
+        let titleHighlight= [
+            {
+                active: true,
+                text: 'Hotels'
+            }
+          
+        ]
+
+        category=titleHighlight.concat(  this.props.category &&  this.props.category.length ? this.props.category.map(cat => {
+            return { active: false, text: `${cat.name}` };
+        }) : [{
+            active: true,
+            text: 'category not fetched'
+        }])
        
         return (
             <>
@@ -42,7 +46,7 @@ import { fetchCategory } from '../../../services/action/common';
                         <h2 className="sec__title cd-headline zoom">
                             {this.state.title}
                             <span className="cd-words-wrapper">
-                                {this.state.category.map((item, index) => {
+                                {category.map((item, index) => {
                                     return (
                                         <b className={item.active ? 'is-visible' : ' '} key={index}> {item.text}</b>
                                     )

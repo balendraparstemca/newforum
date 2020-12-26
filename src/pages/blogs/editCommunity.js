@@ -3,12 +3,12 @@ import { AiOutlineUser } from 'react-icons/ai'
 import { RiSendPlane2Line } from 'react-icons/ri'
 import Select from "react-select";
 import { BsPencil } from 'react-icons/bs';
-import { FaRegEnvelope, FaSoundcloud } from 'react-icons/fa';
+import { FaRegEnvelope, } from 'react-icons/fa';
 import SweetAlert from 'react-bootstrap-sweetalert'
 import { connect } from "react-redux";
 import { communityModel } from '../../model/communityModel';
 import { updatecommunity } from '../../services/action/community';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import { CountryDropdown, } from 'react-country-region-selector';
 import { fetchCategory } from '../../services/action/common';
 
 
@@ -173,10 +173,10 @@ class EditCommunity extends Component {
                                         <div className="contact-form-action">
                                             <form method="post" onSubmit={this.handleCommunity}>
                                                 <div className="input-box">
-                                                    <label className="label-text">Community Name</label>
+                                                    <label className="label-text">Community Name(community name you can't change)</label>
                                                     <div className="form-group">
                                                         <span className="form-icon"><AiOutlineUser /></span>
-                                                        <input className="form-control" type="text" name="name" value={this.state.name} onChange={this.onChangeName} required="required" maxLength="20" placeholder="Community Name(max30)" />
+                                                        <input className="form-control" type="text" name="name" value={this.state.name} onChange={this.onChangeName} required="required" maxLength="20" placeholder="Community Name(max30)" readOnly />
                                                     </div>
                                                 </div>
 

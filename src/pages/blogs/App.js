@@ -66,7 +66,7 @@ function App() {
         <Route path="/list-map-view2" component={ListMapView2} />
         <Route path="/list-left-sidebar" component={ListLeftSidebar} />
         <Route path="/list-right-sidebar" component={ListRightSidebar} />
-        <Route path="/listing-details" component={ListingDetails} />
+        <Route path="/listing-details/:listurl" component={ListingDetails} />
         <Route path="/add-listing" component={AddListing} />
         <Route path="/user-profile" component={UserProfile} />
         <Route path="/top-author" component={TopAuthors} />

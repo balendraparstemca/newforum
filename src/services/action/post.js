@@ -643,3 +643,38 @@ export const postUpdate = (obj) => (dispatch) => {
   );
 
 }
+
+
+export const createpostwith = (obj) => (dispatch) => {
+
+  return PostService.createPostwithimage(obj).then(
+    (response) => {
+
+      if (response) {
+
+        toast.success(response.message);
+      }
+      else {
+
+        toast.success(response.message);
+
+      }
+
+      return Promise.resolve();
+    },
+    (error) => {
+
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      toast.error(message);
+
+
+      return Promise.reject();
+    }
+  );
+
+}

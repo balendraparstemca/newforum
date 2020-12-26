@@ -8,10 +8,10 @@ import Breadcrumb from "../components/common/Breadcrumb";
 import NewsLetter from "../components/other/cta/NewsLetter";
 import Footer from "../components/common/footer/Footer";
 import ScrollTopBtn from "../components/common/ScrollTopBtn";
-import SignInOptions from '../components/other/account/SignInOptions';
 import { connect } from "react-redux";
 import { registerUser } from '../services/action/auth';
 import SweetAlert from 'react-bootstrap-sweetalert';
+import { Helmet } from 'react-helmet';
 class SignUp extends Component {
 
     constructor(props) {
@@ -31,6 +31,7 @@ class SignUp extends Component {
             message: "",
             loading: false,
             breadcrumbimg: require('../assets/images/bread-bg.jpg'),
+            submit: false
         };
     }
 
@@ -81,6 +82,18 @@ class SignUp extends Component {
     }
 
     onChangeCpassword(e) {
+
+        if (this.state.password === e.target.value) {
+            this.setState({
+                submit: false
+            })
+
+        } else {
+            this.setState({
+                submit: true
+            })
+
+        }
         this.setState({
             cpassword: e.target.value,
         });
@@ -126,13 +139,12 @@ class SignUp extends Component {
     }
 
     onConfirm = () => {
-        if(this.state.successfull)
-        {
-        	this.props.history.push("/login");
-			window.location.reload();
-       }
-       this.setState({alert:null,loading:false})
-    
+        if (this.state.successfull) {
+            this.props.history.push("/login");
+            window.location.reload();
+        }
+        this.setState({ alert: null, loading: false })
+
 
 
     }
@@ -140,6 +152,11 @@ class SignUp extends Component {
     render() {
         return (
             <main className="signup-page">
+                <Helmet>
+                    <title>Sign-up</title>
+                    <meta name="description" content="signup page for casual desi" />
+                    <meta name="keywords" content="casual desi,desi yaaro,sitarafoods,discussion forum ,information" />
+                </Helmet>
                 {/* Header */}
                 <GeneralHeader />
 
@@ -164,11 +181,9 @@ class SignUp extends Component {
                                             <form method="post" onSubmit={this.handleRegister}>
                                                 <div className="row">
 
-                                                    <SignInOptions />
 
                                                     <div className="col-lg-12">
                                                         <div className="account-assist mt-4 mb-4 text-center">
-                                                            <p className="account__desc">or</p>
                                                         </div>
                                                     </div>
                                                     <div className="col-lg-12">
@@ -195,7 +210,7 @@ class SignUp extends Component {
                                                     </div>
                                                     <div className="col-lg-12">
                                                         <div className="input-box">
-                                                            <label className="label-text">Username</label>
+                                                            <label className="label-text">Username(please enter uniq name)</label>
                                                             <div className="form-group">
                                                                 <span className="form-icon">
                                                                     <AiOutlineUser />
@@ -206,7 +221,7 @@ class SignUp extends Component {
                                                     </div>
                                                     <div className="col-lg-12">
                                                         <div className="input-box">
-                                                            <label className="label-text">Email</label>
+                                                            <label className="label-text">Email(please enter your email id so you can get notification )</label>
                                                             <div className="form-group">
                                                                 <span className="form-icon">
                                                                     <FaRegEnvelope />
@@ -222,7 +237,7 @@ class SignUp extends Component {
                                                                 <span className="form-icon">
                                                                     <FiLock />
                                                                 </span>
-                                                                <input className="form-control" type="text" name="password" value={this.state.password} onChange={this.onChangePassword} placeholder="Password" />
+                                                                <input className="form-control" type="text" name="password" value={this.state.password} onChange={this.onChangePassword} required="required"  placeholder="Password" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -238,21 +253,13 @@ class SignUp extends Component {
                                                         </div>
 
                                                     </div>
-                                                    <div className="col-lg-12">
-                                                        <div className="form-group">
-                                                            <div className="custom-checkbox d-block mr-0">
-                                                                <input type="checkbox" id="chb13" />
-                                                                <label htmlFor="chb13">I Agree to Dirto's <Link to="#" className="color-text">Privacy Policy</Link></label>
-                                                            </div>
-                                                            <div className="custom-checkbox d-block mr-0">
-                                                                <input type="checkbox" id="chb14" />
-                                                                <label htmlFor="chb14">I Agree to Dirto's <Link to="#" className="color-text">Terms of Services</Link></label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    {this.state.submit && (
+                                                                <span className="label-danger">password does not match</span>
+                                                            )}
+                                                   
                                                     <div className="col-lg-12">
                                                         <div className="btn-box margin-top-20px margin-bottom-20px">
-                                                            <button className="theme-btn border-0" type="submit" disabled={this.state.loading}>
+                                                            <button className="theme-btn border-0" type="submit" disabled={this.state.loading || this.state.submit}>
                                                                 {this.state.loading && (
                                                                     <span className="spinner-border spinner-border-sm"></span>
                                                                 )} Register account
@@ -291,10 +298,10 @@ class SignUp extends Component {
 
 
 function mapStateToProps(state) {
-    const { isLoggedIn,isSignup } = state.auth;
+    const { isLoggedIn, isSignup } = state.auth;
     const { message } = state.message;
     return {
-        isLoggedIn,isSignup,
+        isLoggedIn, isSignup,
         message
     };
 }

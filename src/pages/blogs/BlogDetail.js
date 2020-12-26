@@ -6,20 +6,18 @@ import NewsLetter from "../../components/other/cta/NewsLetter";
 import Footer from "../../components/common/footer/Footer";
 import ScrollTopBtn from "../../components/common/ScrollTopBtn";
 import { FetchpostComment, fetcPostDetail, savePost, postDownvote, postUpvote, reportPost, postComment, postCommentvote, postCommentdelete } from '../../services/action/post';
-import ListingDetailsComments from '../../components/contact/ListingDetailsComments';
-import BlogCommentFields from '../../components/blogs/BlogCommentFields';
-import { FaArrowAltCircleDown, FaArrowAltCircleUp, FaEdit, FaQuoteRight, FaUserCheck } from 'react-icons/fa'
+import { FaArrowAltCircleDown, FaArrowAltCircleUp, FaBuffer, FaEdit, FaQuoteRight, FaUserCheck } from 'react-icons/fa'
 import { BsFillBookmarkFill, BsFillExclamationCircleFill, BsLink45Deg, BsPencil, BsThreeDotsVertical } from 'react-icons/bs';
 import { Link } from "react-router-dom";
-import BlogTags from '../../components/blogs/BlogTags';
 import moment from 'moment';
 import SweetAlert from 'react-bootstrap-sweetalert'
-import { AiFillDelete } from 'react-icons/ai';
-import { DeletePosts } from '../../services/action/user';
 import { FiThumbsUp } from 'react-icons/fi';
 import { Badge } from 'react-bootstrap';
 import SectionDivider from '../../components/common/SectionDivider';
-import BlogComment from '../../components/contact/blogComment';
+import { Dropdown } from 'react-bootstrap';
+import { AiFillDelete } from 'react-icons/ai';
+import { DeletePosts } from '../../services/action/user';
+import { Helmet } from 'react-helmet';
 class BlogDetail extends Component {
 
     constructor(props) {
@@ -29,6 +27,7 @@ class BlogDetail extends Component {
         this.onChangeMessage = this.onChangeMessage.bind(this);
         this.state = {
             postdetail: null,
+            maincomment: [],
             comments: [],
             message: '',
             loading: false,
@@ -96,37 +95,50 @@ class BlogDetail extends Component {
     fetchcomment = (postid) => {
         this.props.dispatch(FetchpostComment(postid)).then(() => {
             if (this.props.postsdetail.length > 0) {
-                this.setState({ comments: this.props.postcomment })
+                this.setState({ comments: this.props.postcomment, maincomment: this.props.postcomment })
             }
         })
     }
 
 
     upvote = async (postid) => {
-        const obj = { 'post_id': postid, 'upvote_by': this.props.userdetails.id };
-        await this.props.dispatch(postUpvote(obj));
-        await this.postdetail();
+        if (this.props.isLoggedIn) {
+            const obj = { 'post_id': postid, 'upvote_by': this.props.userdetails.id };
+            await this.props.dispatch(postUpvote(obj));
+            await this.postdetail();
+        }
+        else {
+            alert('login')
+        }
 
 
     }
 
     downvote = async (postid) => {
-        const obj = { 'post_id': postid, 'downvote_by': this.props.userdetails.id };
-        await this.props.dispatch(postDownvote(obj));
-        await this.postdetail();
-
+        if (this.props.isLoggedIn) {
+            const obj = { 'post_id': postid, 'downvote_by': this.props.userdetails.id };
+            await this.props.dispatch(postDownvote(obj));
+            await this.postdetail();
+        } else {
+            alert('login')
+        }
 
     }
 
     posttComment() {
-        let obj = {
-            comment_by: this.props.userdetails.id, textcomment: this.state.message,
-            post_id: this.state.postdetail.post_id
-        }
-        this.props.dispatch(postComment(obj)).then(() => {
-            this.fetchcomment(this.props.postsdetail[0].post_id);
+        if (this.props.isLoggedIn) {
+            let obj = {
+                comment_by: this.props.userdetails.id, textcomment: this.state.message,
+                post_id: this.state.postdetail.post_id
+            }
+            this.props.dispatch(postComment(obj)).then(() => {
+                this.fetchcomment(this.props.postsdetail[0].post_id);
 
-        })
+            })
+        }
+        else {
+            alert('login')
+        }
 
     }
 
@@ -187,19 +199,57 @@ class BlogDetail extends Component {
     );
 
     onReport = (postid) => {
-        const obj = {
-            post_id: postid,
-            report_by: this.props.userdetails.id,
-            reason: this.state.reporttext
+        if (this.state.reporttext) {
+            const obj = {
+                post_id: postid,
+                report_by: this.props.userdetails.id,
+                reason: this.state.reporttext
+            }
+
+            this.props.dispatch(reportPost(obj));
+            this.setState({ alert: null })
         }
-        console.log(obj);
-        this.props.dispatch(reportPost(obj));
-        this.setState({ alert: null })
+        else {
+            alert("please write something before submit")
+        }
 
     }
 
+    deleteAlert = (postid) => (
+        <SweetAlert
+            warning
+            showCancel
+            confirmBtnText="Yes, delete it!"
+            confirmBtnBsStyle="danger"
+            title="Are you sure?"
+            onConfirm={() => this.onDelete(postid)}
+            onCancel={this.onCancel}
+            focusCancelBtn
+        >
+            You will not be able to recover all data related to this post!
+        </SweetAlert>
+    )
+
+    DeletePost = (postid) => {
+        this.setState({ alert: this.deleteAlert(postid) })
+
+    }
+
+    onDelete(postid) {
+        this.props.dispatch(DeletePosts(postid)).then(() => {
+            this.props.history.push('/forum/home')
+        });
+        this.setState({ alert: null });
+    }
+
     report = (postid) => {
-        this.setState({ alert: this.getAlert(postid) })
+        if (this.props.isLoggedIn) {
+            this.setState({ alert: this.getAlert(postid) })
+        }
+        else {
+            alert('login')
+        }
+
     }
 
 
@@ -207,13 +257,17 @@ class BlogDetail extends Component {
 
 
     savePost = (postid) => {
-        const obj = {
-            post_id: postid,
-            saved_by: this.props.userdetails.id,
+        if (this.props.isLoggedIn) {
+            const obj = {
+                post_id: postid,
+                saved_by: this.props.userdetails.id,
+            }
+            this.props.dispatch(savePost(obj)).then(() => {
+                this.postdetail();
+            });
+        } else {
+            alert('login')
         }
-        this.props.dispatch(savePost(obj)).then(() => {
-            this.postdetail();
-        });
     }
 
     removeComment = (id) => {
@@ -240,31 +294,83 @@ class BlogDetail extends Component {
         });
     }
 
+    sortByold() {
+        let lists = this.state.maincomment;
+        let arr = lists.sort(function (a, b) {
+            return Number(a.comment_time) - Number(b.comment_time);
+        });
+
+        this.setState({ comments: arr })
+
+    }
+
+
+    sortByhighvoting() {
+        let lists = this.state.maincomment;
+        let arr = lists.sort(function (a, b) {
+            return b.vote - a.vote;
+        });
+
+        this.setState({ comments: arr })
+
+    }
+
+
+
+    Sort = (id) => {
+        if (id === 3) {
+            this.sortByhighvoting()
+        }
+        else if (id === 2) {
+            this.sortByold()
+
+        }
+        else {
+            this.setState({ comments: this.state.maincomment })
+        }
+
+
+    }
+
 
     render() {
+        const userid = this.state.postdetail && this.state.postdetail.user
         return (
             <main className="List-map-view2">
                 {/* Header */}
+                <Helmet>
+                    <title>Casual desi</title>
+                    <meta name="title" content={this.state.postdetail && this.state.postdetail.title} />
+                    <meta name="description" content={this.state.postdetail && this.state.postdetail.description} />
+                    <meta name="keywords" content={this.state.postdetail && this.state.postdetail.com_name + ',' + this.state.postdetail && this.state.postdetail.flare_tag} />
+                </Helmet>
+
                 <GeneralHeader />
 
 
 
-                <section className="blog-single-area padding-top-140px padding-bottom-70px">
+                <section className="blog-single-area  margin-top-100px padding-top-140px padding-bottom-70px">
                     <div className="container">
                         <div className="row">
                             <div className="col-lg-8">
                                 <div className="card-item blog-card border-bottom-0">
-                                    <a className="float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><BsThreeDotsVertical />
-                                    </a>
 
-                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a className="dropdown-item" onClick={() => this.report(this.state.postdetail && this.state.postdetail.post_id)}><BsFillExclamationCircleFill /> Report</a>
-                                        <a className="dropdown-item " onClick={() => this.savePost(this.state.postdetail && this.state.postdetail.post_id)}><BsFillBookmarkFill /> save</a>
+                                    <Dropdown className="float-right">
+                                        <Dropdown.Toggle variant="default" id="dropdown-basic">
 
-                                    </div>
+                                        </Dropdown.Toggle>
+
+                                        <Dropdown.Menu>
+                                            {this.props.isLoggedIn ? (this.props.userdetails.id === userid ? <Dropdown.Item><Link to={`/forum/post/edit/${this.state.postdetail && this.state.postdetail.canonicalurl}`} > <FaEdit /> Edit </Link></Dropdown.Item> : '') : ''}
+                                            {this.props.isLoggedIn ? (this.props.userdetails.id === userid ? <Dropdown.Item onClick={() => this.DeletePost(this.state.postdetail && this.state.postdetail.post_id)}><AiFillDelete /> Delete</Dropdown.Item> : '') : ''}
+                                            <Dropdown.Item onClick={() => this.report(this.state.postdetail && this.state.postdetail.post_id)}><BsFillExclamationCircleFill /> Report</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => this.savePost(this.state.postdetail && this.state.postdetail.post_id)}><BsFillBookmarkFill /> save</Dropdown.Item>
+
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                     <div className="row">
                                         <div className="col-1">
-                                            <p className="upvote" onClick={() => this.upvote(this.state.postdetail.post_id)}>  <span className="la"><b><FaArrowAltCircleUp /></b></span> </p><p>{this.state.postdetail && this.state.postdetail.vote}</p><p className="downvote" onClick={() => this.downvote(this.state.postdetail.post_id)}> <span className="la"><b><FaArrowAltCircleDown /></b></span> </p>
+                                            <p className="upvote" onClick={() => this.upvote(this.state.postdetail && this.state.postdetail.post_id)}>  <span className="la"><b><FaArrowAltCircleUp /></b></span> </p><p>{this.state.postdetail && this.state.postdetail.vote}</p><p className="downvote" onClick={() => this.downvote(this.state.postdetail.post_id)}> <span className="la"><b><FaArrowAltCircleDown /></b></span> </p>
 
                                         </div>
                                         <div className="col-11">
@@ -289,7 +395,7 @@ class BlogDetail extends Component {
 
                                                 </p>
                                                 <div className="card-image">
-                                                { this.state.postdetail && this.state.postdetail.imgSrc ? <img src={`http://localhost:7999/api/v1/utilities/${this.state.postdetail.imgSrc}`} alt="Blog Full Width" className="card__img" />: ''}
+                                                    {this.state.postdetail && this.state.postdetail.imgSrc ? <img src={`http://localhost:7999/api/v1/utilities/${this.state.postdetail.imgSrc}`} alt="Blog Full Width" className="card__img" /> : ''}
                                                 </div>
                                                 <p className="card-sub mt-3">
 
@@ -341,11 +447,29 @@ class BlogDetail extends Component {
                                                                 </form>
                                                             </div>
                                                         </div>
+
+                                                        <Dropdown className="float-right">
+                                                            <Dropdown.Toggle variant="primary" id="dropdown-basic2">
+                                                                sort
+                                                        </Dropdown.Toggle>
+
+                                                            <Dropdown.Menu>
+                                                                <Dropdown.Item onClick={() => this.Sort(1)}>  Sort By High voted</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => this.Sort(2)}> <FaBuffer /> Sort By Old</Dropdown.Item>
+                                                                <Dropdown.Item onClick={() => this.Sort(3)}> <FaBuffer /> Sort By High voted</Dropdown.Item>
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+
                                                         <SectionDivider />
                                                     </div>
-                                                    <div className="section-block-2 margin-top-40px"></div>
+                                                    <div className="section-block-2 margin-top-40px">
 
-                                                    <div className="title-shape"></div>
+                                                    </div>
+
+                                                    <div className="title-shape">
+
+                                                    </div>
+
                                                     <h2 className="widget-title">{this.state.comments && this.state.comments.length} discussion</h2>
                                                     <ul className="comments-list padding-top-40px">
                                                         <li>
@@ -368,13 +492,17 @@ class BlogDetail extends Component {
                                                                                 </span>
 
                                                                             </div>
-                                                                            <a className="float-right" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><BsThreeDotsVertical />
-                                                                            </a>
 
-                                                                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a className="dropdown-item" onClick={() => this.removeComment(comment.comment_id)}><BsFillExclamationCircleFill /> Remove</a>
 
-                                                                            </div>
+                                                                            <Dropdown className="float-right">
+                                                                                <Dropdown.Toggle variant="default" id="dropdown-basic">
+
+                                                                                </Dropdown.Toggle>
+
+                                                                                <Dropdown.Menu>
+                                                                                    {this.props.isLoggedIn ? (this.props.userdetails.id === comment.comment_by ? <Dropdown.Item onClick={() => this.removeComment(comment.comment_id)}><AiFillDelete /> Delete</Dropdown.Item> : '') : ''}
+                                                                                </Dropdown.Menu>
+                                                                            </Dropdown>
                                                                             <p className="comment-content">
                                                                                 {comment.text}
                                                                             </p>
@@ -384,7 +512,7 @@ class BlogDetail extends Component {
                                                                                     Was this comment?
                                                                              <button type="button" className="theme-btn" onClick={() => this.vote(comment.comment_id)}>
                                                                                         <i className="la d-inline-block"><FiThumbsUp /></i> Helpfull <Badge variant="success">{comment.vote}</Badge>
-                                                                                    </button>
+                                                                            </button>
 
                                                                                 </p>
                                                                             </div>
@@ -429,10 +557,10 @@ class BlogDetail extends Component {
 
 function mapStateToProps(state) {
     const { postsdetail, postcomment } = state.post;
-    const { userdetails } = state.auth;
+    const { userdetails, isLoggedIn } = state.auth;
 
     return {
-        postsdetail, userdetails, postcomment
+        postsdetail, userdetails, postcomment, isLoggedIn
 
     };
 }

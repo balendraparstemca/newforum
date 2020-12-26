@@ -1,18 +1,11 @@
 import React, { Component } from 'react';
 import GeneralHeader from "../../components/common/GeneralHeader";
 import Breadcrumb from "../../components/common/Breadcrumb";
-import BlogSidebar from "../../components/sidebars/BlogSidebar";
-import BlogTwoColumns from "../../components/blogs/BlogTwoColumns";
-import Pagination from "../../components/blogs/Pagination";
 import NewsLetter from "../../components/other/cta/NewsLetter";
 import Footer from "../../components/common/footer/Footer";
 import ScrollTopBtn from "../../components/common/ScrollTopBtn";
-import WidgetSearchTwo from '../../components/sidebars/widgets/WidgetSearchTwo';
 import ForumCategory from '../../components/sidebars/widgets/forumCategory';
-import WidgetSubscribe from '../../components/sidebars/widgets/WidgetSubscribe';
-import WidgetPopularPost from '../../components/sidebars/widgets/WidgetPopularPost';
 import CommunityList from '../../components/blogs/communityList';
-import CommunityListNear from '../../components/blogs/communitylistNear';
 import { fetchCommunityList } from '../../services/action/common';
 import { connect } from "react-redux";
 class BlogLeftSidebar extends Component {

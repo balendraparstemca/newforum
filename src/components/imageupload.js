@@ -24,7 +24,7 @@ export default class FilesUploadComponent extends Component {
 
 
     onFileChange(e) {
-        this.setState({ imgCollection: e.target.files })
+        this.setState({ imgCollection: e.target.files[0] })
     }
 
     onSubmit(e) {
@@ -57,8 +57,7 @@ export default class FilesUploadComponent extends Component {
                         </div>
 
                         <div className="form-group">
-                            <img src={'http://localhost:7999/api/v1/utilities/image-dark-mode-1605854407226.png'}></img>
-                            <button className="btn btn-primary" type="submit">Upload</button>
+                               <button className="btn btn-primary" type="submit">Upload</button>
                         </div>
                     </form>
                 </div>

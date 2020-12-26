@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_URL = "http://localhost:7999/api/v1/";
+const API_URL = process.env.REACT_APP_API_KEY
 
 class PostService {
   createPost(obj) {
@@ -9,6 +9,15 @@ class PostService {
       console.log(response);
 
       return response.data;
+    });
+  }
+
+
+  createPostwithimage(obj) {
+    return axios.post(API_URL + "utilities/createpost_upload", obj).then((response) => {
+      console.log(response);
+
+      return response;
     });
   }
 
@@ -118,6 +127,8 @@ class PostService {
       return response.data;
     });
   }
+
+ 
 
   postRemoveComment(commentid)
   {

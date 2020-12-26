@@ -6,8 +6,9 @@ import list from "./listReducer";
 import user from "./userReducer";
 import post from "./postReducer";
 import community from "./communityReducer";
+import notification from "./notificationReducer";
 
 export default combineReducers({
   auth,
-  message,common,list,user,post,community
+  message,common,list,user,post,community,notification
 });

@@ -4,9 +4,8 @@ import {  fetchCommunityList } from '../../services/action/common';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import moment from 'moment';
 import { TiGroup } from 'react-icons/ti';
-import { Button } from 'react-bootstrap';
-import { BsEye } from 'react-icons/bs';
 import { FaBusinessTime, FaUserFriends } from 'react-icons/fa';
+
 class CommunitySidebar extends Component {
 
     constructor(props) {
@@ -21,6 +20,7 @@ class CommunitySidebar extends Component {
         }
     }
     componentDidMount() {
+       
         this.setState({
             communitydetails: this.props.communitydetails[0],
 
@@ -30,6 +30,7 @@ class CommunitySidebar extends Component {
     }
 
     componentDidUpdate(prevProps) {
+      
         if (this.state.catid !== this.props.categoryid) {
             this.setState({ catid: this.props.categoryid });
             this.setState({
@@ -74,7 +75,7 @@ class CommunitySidebar extends Component {
                                        <FaBusinessTime/> created : {moment(Number(this.state.communitydetails && this.state.communitydetails.Date)).fromNow()}
                                     </p>
                                     <p className="author__meta">
-                                       <FaUserFriends/> Member : 12                                    </p>
+                                       <FaUserFriends/> Member : {this.props.communitymember && this.props.communitymember.length}                                  </p>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +89,7 @@ class CommunitySidebar extends Component {
 
                     <div className="sidebar-widget tag-widget">
                         <h3 className="widget-title">
-                            Filter By Flair
+                            Tags & Flair
                                                                 </h3>
                         <div className="title-shape"></div>
                         <ul className="tag-list padding-top-30px">
@@ -96,7 +97,7 @@ class CommunitySidebar extends Component {
                             {lists && lists.map((item, i) => {
                                 return (
                                     <li key={i}>
-                                        <Link to={item.url}>{item.text}</Link>
+                                        <Link>{item.text}</Link>
                                     </li>
                                 )
                             })}
@@ -120,7 +121,7 @@ class CommunitySidebar extends Component {
                                          </Link>
 
                                         </li>
-                                    ) : this.state.communitylist.slice(0,5).map((com, i) => {
+                                    ) : this.state.communitylist.filter((obj)=>{ return obj.com_id!== this.props.communitydetails[0].com_id}).slice(0,5).map((com, i) => {
                                         return (
                                             <li className="mb-2 pb-2" key={i}>
                                                 <div className="author-bio margin-bottom-0px">
@@ -156,13 +157,13 @@ class CommunitySidebar extends Component {
 
 
 function mapStateToProps(state) {
-    const { communitydetails, communitylist } = state.community;
+    const { communitydetails, communitylist,communitymember } = state.community;
     const { message } = state.message;
     const { category } = state.common;
     const { posts } = state.post;
 
     return {
-        communitydetails, category, communitylist, posts,
+        communitydetails, category,communitymember, communitylist, posts,
         message
     };
 }
